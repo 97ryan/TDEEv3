@@ -1,1032 +1,924 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Adaptive TDEE</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Adaptive TDEE</title>
 
-<!-- iOS look & A2HS -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAABl0RVh0Q3JlYXRpb24gVGltZQAwOS8yMC8yNVgF1H4AAABqSURBVHhe7dQxAQAwDMCw/58yS0kWgOCp8y0AAAB8gWwq6J8DAACgABwAAIADHAAAQAIcAABAAhwAAEACHAAAgAMcAABAAhwAAEACHAAAgAMcAABAAhwAAEACHAAAgAMcAABAAhwAAEACHAAAgAN9gQF9m5b1x2yQAAAAASUVORK5CYII=">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Adaptive TDEE">
+    <meta name="theme-color" content="#18181b">
 
-<style>
-  :root{
-    --bg: #0b0b0b;
-    --fg: #0f1115;
-    --card: rgba(255,255,255,0.82);
-    --card-dark: rgba(22,22,24,0.72);
-    --text: #0a0a0a;
-    --text-dark: #f5f7fa;
-    --accent: #0a84ff; /* iOS blue */
-    --red: #ff453a;
-    --yellow: #ffd60a;
-    --green: #30d158;
-    --muted: #6b7280;
-    --ring: rgba(10,132,255,0.35);
-    --shadow: 0 10px 30px -10px rgba(0,0,0,0.35);
-    --radius: 18px;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg: #000;
-      --fg: #0a0a0a;
-      --card: var(--card-dark);
-      --text: var(--text-dark);
-      --shadow: 0 14px 34px -12px rgba(0,0,0,0.6);
-    }
-  }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body{
-    margin:0;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text","SF Pro Display","Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: radial-gradient(1200px 800px at 100% -20%, #1f2a44 0%, #0b0b0b 40%), var(--bg);
-    color: var(--text);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  .shell{
-    max-width: 1120px; margin: 0 auto; padding: env(safe-area-inset-top) 16px 40px; position: relative;
-  }
-  header{
-    display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0 8px;
-    position: sticky; top: 0; backdrop-filter: saturate(180%) blur(18px);
-    z-index:10;
-  }
-  .brand{
-    font-weight: 800; letter-spacing:-0.02em; font-size: clamp(20px, 4vw, 28px);
-    background: linear-gradient(180deg,#fff,#dfe7ff 60%,#c7d2fe);
-    -webkit-background-clip: text; background-clip:text; color: transparent;
-  }
-  nav{ display:flex; flex-wrap:wrap; gap:6px; }
-  .tab{
-    appearance:none; border:0; padding:8px 12px; border-radius: 13px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(240,240,245,0.8));
-    color:#111; box-shadow: var(--shadow);
-  }
-  .tab[aria-selected="true"]{ background: var(--accent); color:white; }
-  .card{
-    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
-    backdrop-filter: saturate(150%) blur(18px); padding:14px;
-  }
-  .section { margin-top: 10px; display: grid; gap: 12px; }
-  .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-  .label{ font-size:12px; color: var(--muted); margin-bottom:6px; }
-  .input, .select, .button{
-    width:100%; padding:12px 13px; border-radius: 14px; border:1px solid rgba(0,0,0,0.08);
-    background: rgba(255,255,255,0.85); color:#0b0b0b; outline: none;
-  }
-  .input:focus, .select:focus{
-    border-color: var(--accent); box-shadow: 0 0 0 4px var(--ring);
-  }
-  .button{
-    background: linear-gradient(180deg, #ffffff, #f1f5ff);
-    font-weight: 600;
-  }
-  .button.primary{
-    background: linear-gradient(180deg, #3691ff, #0a84ff);
-    color: white; border-color: rgba(10,132,255,0.5);
-  }
-  .button.ghost{ background: rgba(255,255,255,0.6); }
-  .kpi{
-    display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:12px;
-  }
-  .kpi .cell{ padding:12px; border-radius: 14px; background: rgba(255,255,255,0.7); }
-  .kpi .title{ font-size:12px; color: var(--muted); }
-  .kpi .value{ font-weight:800; font-size: 22px; margin-top: 2px; }
-  .warn{ color: var(--yellow); font-size: 12px; }
-  .danger{ color: var(--red); font-size: 12px; }
-  .ok{ color: var(--green); font-size: 12px; }
-  .conf{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius: 999px; color:white; font-weight:700; }
-  .conf.low{ background: #ff3b30; } .conf.med{ background:#ff9f0a; } .conf.high{ background:#30d158; }
-  .subtle{ color: var(--muted); font-size: 12px; }
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMWEyOTI3Ij48L3JlY3Q+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MCIgZmlsbD0iI2YwZjBmMSI+QTwvdGV4dD48dGV4dCB4PSI1MCUiIHk9Ijc1JSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNizeU9IjI0IiBmaWxsPSIjZjBmMGYxIj5UPC90ZXh0Pjwvc3ZnPg==">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMWEyOTI3Ij48L3JlY3Q+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MCIgZmlsbD0iI2YwZjBmMSI+QTwvdGV4dD48dGV4dCB4PSI1MCUiIHk9Ijc1JSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmaWxsPSIjZjBmMGYxIj5UPC90ZXh0Pjwvc3ZnPg==">
 
-  .toolbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
-  .chip{ padding:6px 10px; border-radius: 12px; background: rgba(255,255,255,0.7); font-size:12px; }
-  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
-
-  .range button{ border-radius:12px; padding:8px 10px; border:0; background: rgba(255,255,255,0.78); }
-  .range button.active{ background: var(--accent); color:white; }
-
-  canvas{ width:100%; height: 360px; display:block; border-radius: 16px; background: rgba(255,255,255,0.65); }
-
-  table{ width:100%; border-collapse: collapse; font-size: 13px; }
-  th, td{ padding:10px; border-bottom: 1px solid rgba(0,0,0,0.08); }
-  th{ text-align:left; color: var(--muted); }
-
-  .overlay{ position: fixed; inset:0; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); display:flex; align-items:center; justify-content:center; padding:16px; z-index: 50; }
-  .hidden{ display:none !important; }
-
-  .pill{ padding:6px 10px; border-radius: 999px; background: rgba(255,255,255,0.7); font-size: 11px; }
-  .flex{ display:flex; gap:8px; align-items:center; }
-  .center{ display:flex; align-items:center; justify-content:center; }
-  .right{ text-align:right; }
-  .sep{ height:1px; background: rgba(0,0,0,0.07); margin: 6px 0; }
-  .small{ font-size: 12px; }
-</style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'media', // or 'class'
+        theme: {
+          extend: {
+            colors: {
+              gray: {
+                50: '#fafafa', 75: '#f5f5f5', 100: '#f4f4f5', 200: '#e4e4e7', 300: '#d4d4d8', 400: '#a1a1aa',
+                500: '#71717a', 600: '#52525b', 700: '#3f3f46', 800: '#27272a', 900: '#18181b', 950: '#09090b',
+              },
+            }
+          }
+        }
+      }
+    </script>
+    
+    <style>
+        :root { --safe-area-inset-bottom: env(safe-area-inset-bottom); }
+        body { 
+          -webkit-tap-highlight-color: transparent; /* Disable tap highlight on iOS */
+        }
+        .touch-manipulation { touch-action: manipulation; }
+        .bottom-nav { padding-bottom: calc(0.5rem + var(--safe-area-inset-bottom)); }
+        /* Simple transition for screen switching */
+        .screen { display: none; }
+        .screen.active { display: block; }
+        /* Chart.js tooltip fix */
+        .chart-container { position: relative; height: 40vh; width: 100%; }
+    </style>
 </head>
-<body>
-<div class="shell">
-
-  <header>
-    <div class="brand">Adaptive TDEE</div>
-    <nav id="tabs">
-      <button class="tab" data-tab="daily" aria-selected="true">Daily</button>
-      <button class="tab" data-tab="graph">Graph</button>
-      <button class="tab" data-tab="table">Table</button>
-      <button class="tab" data-tab="import">Import/Export</button>
-      <button class="tab" data-tab="settings">Settings</button>
-      <button class="tab" data-tab="help">Help</button>
-    </nav>
-  </header>
-
-  <div id="confRow" class="toolbar" style="margin:8px 0;">
-    <div id="confBadge" class="conf low">Estimation confidence: Low</div>
-    <div class="subtle" id="windowMeta"></div>
-  </div>
-
-  <!-- DAILY -->
-  <section id="page-daily" class="section">
-    <div class="toolbar">
-      <button id="prevDay" class="button">◀</button>
-      <div class="subtle">Swipe left/right to change day</div>
-      <button id="nextDay" class="button">▶</button>
-    </div>
-
-    <div class="card" id="dailyCard">
-      <div class="toolbar">
-        <div style="font-weight:800; font-size:18px" id="dateLabel"></div>
-        <div id="lastAction" class="subtle"></div>
-      </div>
-      <div class="row">
-        <div>
-          <div class="label">Weight (<span id="unitLabel">kg</span>)</div>
-          <input id="inWeight" class="input" inputmode="decimal" placeholder="e.g., 70.2" />
-        </div>
-        <div>
-          <div class="label">Calories (kcal)</div>
-          <input id="inCalories" class="input" inputmode="numeric" placeholder="e.g., 2350" />
-        </div>
-        <div style="grid-column: 1 / -1;">
-          <div class="label">Note</div>
-          <input id="inNote" class="input" placeholder="optional" />
-        </div>
-      </div>
-      <div class="sep"></div>
-      <div class="kpi">
-        <div class="cell"><div class="title">Need to eat</div><div class="value" id="kNeed">— kcal</div></div>
-        <div class="cell"><div class="title">TDEE</div><div class="value" id="kTDEE">— kcal</div></div>
-        <div class="cell"><div class="title">Calorie change needed</div><div class="value" id="kDelta">— kcal/day</div></div>
-        <div class="cell"><div class="title">Current weight change</div><div class="value" id="kChange">—</div></div>
-      </div>
-      <div class="sep"></div>
-      <div class="flex">
-        <button id="btnSave" class="button primary">Save</button>
-        <button id="btnUndo" class="button">Undo last</button>
-        <button id="btnDelete" class="button ghost">Delete entry</button>
-      </div>
-      <div class="small" id="gateMsg"></div>
-    </div>
-  </section>
-
-  <!-- GRAPH -->
-  <section id="page-graph" class="section hidden">
-    <div class="card">
-      <div class="toolbar" style="margin-bottom:8px">
-        <div class="chips range">
-          <button data-range="1m">1M</button>
-          <button data-range="3m" class="active">3M</button>
-          <button data-range="6m">6M</button>
-          <button data-range="1y">1Y</button>
-          <button data-range="all">All</button>
-        </div>
-        <div class="chips">
-          <label class="chip"><input type="checkbox" id="showWeight" checked> Weight</label>
-          <label class="chip"><input type="checkbox" id="showCalories" checked> Calories</label>
-          <label class="chip"><input type="checkbox" id="showTrend" checked> Trend</label>
-          <label class="chip"><input type="checkbox" id="showCalMA" checked> Calories 7d MA</label>
-        </div>
-      </div>
-      <canvas id="chart" width="1100" height="360"></canvas>
-      <div class="subtle">Left axis: Weight (<span id="axisUnit">kg</span>) · Right axis: kcal</div>
-    </div>
-  </section>
-
-  <!-- TABLE -->
-  <section id="page-table" class="section hidden">
-    <div class="card">
-      <div class="toolbar">
-        <div style="font-weight: 700;">Entries</div>
-        <button id="btnDeleteSelected" class="button">Delete selected</button>
-      </div>
-      <div class="sep"></div>
-      <div style="overflow:auto;">
-        <table id="table">
-          <thead>
-            <tr>
-              <th><input type="checkbox" id="chkAll"></th>
-              <th data-sort="date">DATE</th>
-              <th data-sort="weightKg">WEIGHT (kg)</th>
-              <th data-sort="calories">CALORIES</th>
-              <th>Δ FROM NEED</th>
-              <th>NOTE</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- IMPORT/EXPORT -->
-  <section id="page-import" class="section hidden">
-    <div class="card">
-      <div class="row">
-        <div>
-          <div class="label">Import CSV (date, weightKg, calories)</div>
-          <input type="file" id="fileCSV" class="input" accept=".csv,text/csv" />
-          <label class="chip"><input type="checkbox" id="chkCSVlbs"> Imported weights are in lbs</label>
-        </div>
-        <div>
-          <div class="label">Status</div>
-          <div id="importStatus" class="pill">—</div>
-        </div>
-      </div>
-      <div class="sep"></div>
-      <div class="flex">
-        <button id="btnExportCSV" class="button">Export CSV</button>
-        <button id="btnExportJSON" class="button">Export JSON</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- SETTINGS -->
-  <section id="page-settings" class="section hidden">
-    <div class="card">
-      <div class="row">
-        <div>
-          <div class="label">Goal: target weekly change (kg/wk)</div>
-          <input type="range" min="-1" max="1" step="0.05" id="sTarget" />
-          <div class="small">Current: <span id="sTargetVal">0.00</span> kg/wk</div>
-        </div>
-        <div>
-          <div class="label">Units</div>
-          <select id="sUnit" class="select">
-            <option value="metric">Metric (kg, kcal)</option>
-            <option value="imperial">Imperial (lb, kcal)</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <div class="label">Regression window (days)</div>
-          <input id="sReg" class="input" type="number" min="21" max="84" />
-        </div>
-        <div>
-          <div class="label">Calorie average window (days)</div>
-          <input id="sCalWin" class="input" type="number" min="14" max="84" />
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <div class="label">Day rollover hour (0–23)</div>
-          <input id="sRollover" class="input" type="number" min="0" max="23" />
-        </div>
-        <div>
-          <div class="label">Outlier trim (%)</div>
-          <input id="sTrim" class="input" type="number" min="0" max="5" />
-        </div>
-      </div>
-
-      <div class="row">
-        <label class="chip"><input type="checkbox" id="sAvgDaily"> Average multiple weights/day</label>
-        <div></div>
-      </div>
-
-      <div class="row">
-        <label class="chip"><input type="checkbox" id="sShowBand"> Show confidence band (UI only)</label>
-        <div>
-          <div class="label">Default graph range</div>
-          <select id="sRange" class="select">
-            <option value="1m">1 mo</option>
-            <option value="3m">3 mo</option>
-            <option value="6m">6 mo</option>
-            <option value="1y">1 y</option>
-            <option value="all">All</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="sep"></div>
-      <div class="row">
-        <div>
-          <div class="label">Passcode (4–8 digits)</div>
-          <input id="sPIN" class="input" placeholder="optional" inputmode="numeric" />
-        </div>
-        <div class="center">
-          <button id="btnReset" class="button">Reset all data</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HELP -->
-  <section id="page-help" class="section hidden">
-    <div class="card">
-      <div style="font-weight:800; font-size:18px; margin-bottom:8px">Help & FAQ</div>
-      <div class="small" style="line-height:1.5">
-        <p><b>How do I use the app?</b> Enter daily weight (kg) and calories (kcal). The app uses OLS on your weight trend + your average calories to estimate your Adaptive TDEE.</p>
-        <p><b>How long until it’s accurate?</b> Collect at least 3 weeks (≥21 days) of weights. More data → higher confidence.</p>
-        <p><b>Formulas</b><br>
-          slopeKgPerDay = regression slope; currentWeightChangeKgPerWeek = slope×7.<br>
-          avgCalories = mean over calorie window.<br>
-          deltaKcalPerDay = slope×7,700; TDEE = avgCalories − deltaKcalPerDay.<br>
-          needToEat = TDEE + (targetWeeklyChangeKg/7×7,700).<br>
-          calorieChangeNeeded = needToEat − avgCalories.
-        </p>
-        <p><b>Missing data?</b> Works with partial inputs. With missing calories, TDEE is unknown but weight trend still shows.</p>
-        <p><b>Privacy</b> All data stays on your device. Imports are processed locally. Exports leave only when you share/save.</p>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<!-- Onboarding -->
-<div id="ob" class="overlay hidden">
-  <div class="card" style="max-width:520px">
-    <div style="font-weight:800; font-size:22px; margin-bottom:6px;">Welcome to Adaptive TDEE</div>
-    <p class="small">Track weight + calories → get your true TDEE and how much to eat to hit a weekly goal. Local-only. Works great as an iOS Home Screen app.</p>
-    <ul class="small" style="line-height:1.5">
-      <li>Enter weight (kg) and calories (kcal). Skipping days is fine.</li>
-      <li>It takes ~3+ weeks of weights for a solid estimate.</li>
-      <li>Data stays on device; no accounts, no telemetry.</li>
-    </ul>
-    <div class="sep"></div>
-    <div class="flex">
-      <button id="obSample" class="button">Load sample data</button>
-      <button id="obStart" class="button primary">Start</button>
-    </div>
-    <div class="small subtle" style="margin-top:6px;">Tip: Share → “Add to Home Screen”.</div>
-  </div>
-</div>
-
-<!-- Passcode gate -->
-<div id="gate" class="overlay hidden">
-  <div class="card" style="max-width:360px">
-    <div style="font-weight:800; font-size:18px">Enter passcode</div>
-    <input id="gatePIN" class="input" type="password" inputmode="numeric" placeholder="PIN" />
-    <div class="flex" style="margin-top:8px;">
-      <button id="btnUnlock" class="button primary">Unlock</button>
-    </div>
-  </div>
-</div>
-
-<script>
-/*** Utilities ***/
-const clamp = (v,min,max)=>Math.min(max,Math.max(min,v));
-const kgToLb = kg => kg * 2.2046226218;
-const lbToKg = lb => lb / 2.2046226218;
-const toISO = d => new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0,10);
-function todayISO(rolloverHour){
-  const now = new Date();
-  const local = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
-  if (local.getHours() < rolloverHour){
-    const y = new Date(local.getTime() - 86400000);
-    return toISO(y);
-  }
-  return toISO(local);
-}
-function fmtKcal(v){ return v==null ? "— kcal" : Math.round(v).toLocaleString()+" kcal"; }
-function fmtDeltaKgPerWeek(v, unit){
-  if (v==null) return "—";
-  const sign = v>=0 ? "+" : "";
-  return unit==="metric"
-    ? sign + v.toFixed(3) + " kg/wk"
-    : sign + kgToLb(v).toFixed(2) + " lb/wk";
-}
-function mean(arr){ return arr.length? arr.reduce((a,b)=>a+b,0)/arr.length : null; }
-function stdev(arr){
-  if (arr.length<2) return 0;
-  const m=mean(arr); let s=0; arr.forEach(v=>s+=(v-m)*(v-m)); return Math.sqrt(s/(arr.length-1));
-}
-function movingAverage(series, window){
-  const out=[]; for(let i=0;i<series.length;i++){ const start=Math.max(0,i-window+1);
-    const slice=series.slice(start,i+1).map(d=>d.value); out.push({date:series[i].date, value: mean(slice)});
-  } return out;
-}
-function trimBounds(values, pct){
-  if (pct<=0 || values.length===0) return {lo:-Infinity, hi:Infinity};
-  const sorted=[...values].sort((a,b)=>a-b);
-  const k=Math.floor(sorted.length*(pct/100));
-  return { lo: sorted[k], hi: sorted[sorted.length-k-1] };
-}
-
-/*** Storage (localStorage JSON) ***/
-const KEY="adaptive_tdee_singlefile_v1";
-const Defaults = {
-  settings:{
-    targetWeeklyChangeKg: 0.0,
-    regressionWindowDays: 49,
-    calorieAvgWindowDays: 49,
-    unitSystem: "metric",
-    dayRollOverHour: 4,
-    outlierTrimPct: 0,
-    averageDailyWeights: false,
-    showCalMA: true,
-    showBand: false,
-    defaultRange: "3m",
-    passcode: null
-  },
-  entries:{} // date -> {weightKg?, calories?, note?, source?}
-};
-function loadState(){
-  try{ const raw=localStorage.getItem(KEY); if(!raw) return structuredClone(Defaults);
-    const obj=JSON.parse(raw);
-    return { ...structuredClone(Defaults), ...obj, settings:{...structuredClone(Defaults).settings, ...obj.settings}};
-  }catch{ return structuredClone(Defaults); }
-}
-function saveState(){ localStorage.setItem(KEY, JSON.stringify(State)); }
-
-/*** Global State ***/
-let State = loadState();
-let CurrentDate = todayISO(State.settings.dayRollOverHour);
-let LastSnapshot = null; // for undo
-
-/*** Core Calculations ***/
-const KCAL_PER_KG = 7700;
-
-function sortedDates(){
-  return Object.keys(State.entries).sort();
-}
-function entriesArray(){
-  return sortedDates().map(d=>({date:d, ...State.entries[d]}));
-}
-function daysAgo(dateISO, n){
-  const d=new Date(dateISO+"T00:00:00"); return toISO(new Date(d.getTime()- (n*86400000)));
-}
-function withinDays(arr, days, key){
-  if(arr.length===0) return [];
-  const last = arr[arr.length-1].date;
-  const startISO = daysAgo(last, days-1);
-  return arr.filter(r=>r.date>=startISO && r[key]!=null);
-}
-
-function ols(points){
-  const n=points.length; if(n<2) return {slope:null, intercept:null, r2:null};
-  let sumX=0,sumY=0,sumXY=0,sumXX=0;
-  for(const p of points){ sumX+=p.x; sumY+=p.y; sumXY+=p.x*p.y; sumXX+=p.x*p.x; }
-  const denom = n*sumXX - sumX*sumX; if (denom===0) return {slope:null,intercept:null,r2:null};
-  const slope = (n*sumXY - sumX*sumY)/denom;
-  const intercept = (sumY - slope*sumX)/n;
-  const meanY = sumY/n;
-  let ssTot=0, ssRes=0;
-  for(const p of points){ const yhat=slope*p.x + intercept; ssTot+=(p.y-meanY)**2; ssRes+=(p.y-yhat)**2; }
-  const r2 = ssTot===0? 1 : 1 - (ssRes/ssTot);
-  return {slope,intercept,r2};
-}
-
-function computeAll(){
-  const S = State.settings;
-  const arr = entriesArray();
-
-  // regression window on weights
-  const wWin = withinDays(arr, S.regressionWindowDays, "weightKg");
-  const daysWithWeight = wWin.length;
-
-  let slope=null, intercept=null, r2=null;
-  if (daysWithWeight >= 21){
-    const weights = wWin.map(r=>r.weightKg);
-    const {lo,hi} = trimBounds(weights, S.outlierTrimPct);
-    const pts=[]; let idx=0;
-    for(const r of wWin){
-      if (r.weightKg>=lo && r.weightKg<=hi){ pts.push({x: idx, y: r.weightKg}); }
-      idx++;
-    }
-    const fit = ols(pts);
-    slope = fit.slope; intercept = fit.intercept; r2 = fit.r2;
-  }
-
-  const currentWeightChangeKgPerWeek = slope==null? null : slope*7;
-
-  // calories window
-  const cWin = withinDays(arr, S.calorieAvgWindowDays, "calories");
-  const daysWithCalories = cWin.length;
-  const avgCalories = daysWithCalories ? mean(cWin.map(r=>r.calories)) : null;
-
-  const deltaKcalPerDay = slope==null? null : slope*KCAL_PER_KG;
-  const TDEE = (avgCalories!=null && deltaKcalPerDay!=null) ? (avgCalories - deltaKcalPerDay) : null;
-
-  const targetDeltaPerDay = (S.targetWeeklyChangeKg / 7) * KCAL_PER_KG;
-  const needToEat = TDEE!=null ? (TDEE + targetDeltaPerDay) : null;
-  const calorieChangeNeeded = (needToEat!=null && avgCalories!=null) ? (needToEat - avgCalories) : null;
-
-  const windowCoveragePct = Math.round((daysWithWeight / Math.max(1, S.regressionWindowDays))*100);
-
-  return {
-    slopeKgPerDay: slope,
-    intercept,
-    r2,
-    currentWeightChangeKgPerWeek,
-    avgCalories,
-    TDEE,
-    needToEat,
-    calorieChangeNeeded,
-    dataQuality:{
-      daysWithWeight, daysWithCalories, windowCoveragePct, r2
-    },
-    graphPrep: { wWin, cWin } // for trend mapping
-  };
-}
-
-/*** UI — Tabs ***/
-const pages = {
-  daily: document.getElementById("page-daily"),
-  graph: document.getElementById("page-graph"),
-  table: document.getElementById("page-table"),
-  import: document.getElementById("page-import"),
-  settings: document.getElementById("page-settings"),
-  help: document.getElementById("page-help"),
-};
-document.querySelectorAll('#tabs .tab').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const t=btn.dataset.tab;
-    document.querySelectorAll('#tabs .tab').forEach(b=>b.setAttribute('aria-selected', String(b===btn)));
-    for (const k in pages){ pages[k].classList.toggle('hidden', k!==t); }
-    if (t==="graph") drawChart();
-    if (t==="table") renderTable();
-  });
-});
-
-/*** UI — Daily ***/
-const dateLabel = document.getElementById("dateLabel");
-const inWeight = document.getElementById("inWeight");
-const inCalories = document.getElementById("inCalories");
-const inNote = document.getElementById("inNote");
-const unitLabel = document.getElementById("unitLabel");
-const lastActionEl = document.getElementById("lastAction");
-const gateMsg = document.getElementById("gateMsg");
-
-function setDate(dISO){
-  CurrentDate = dISO;
-  dateLabel.textContent = new Date(dISO+"T00:00:00").toDateString();
-  const e = State.entries[dISO] || {};
-  const unit = State.settings.unitSystem;
-  inWeight.value = (e.weightKg!=null) ? (unit==="metric"? e.weightKg.toFixed(2) : kgToLb(e.weightKg).toFixed(1)) : "";
-  inCalories.value = (e.calories!=null) ? String(Math.round(e.calories)) : "";
-  inNote.value = e.note||"";
-}
-function saveEntry(){
-  const unit=State.settings.unitSystem;
-  const wRaw=inWeight.value.trim(); const cRaw=inCalories.value.trim();
-  let weightKg = (wRaw==="") ? undefined : Number(wRaw);
-  if (weightKg!=null && !isNaN(weightKg)) weightKg = (unit==="metric"? weightKg : lbToKg(weightKg));
-  let calories = (cRaw==="") ? undefined : Number(cRaw);
-  const note = inNote.value;
-
-  const prev = State.entries[CurrentDate] ? {...State.entries[CurrentDate]} : null;
-  LastSnapshot = { date: CurrentDate, prev };
-
-  if (!State.entries[CurrentDate]) State.entries[CurrentDate] = { source:"manual" };
-  const target = State.entries[CurrentDate];
-  // Average behavior for multiple weights/day
-  if (State.settings.averageDailyWeights && weightKg!=null && target.weightKg!=null){
-    target.weightKg = (target.weightKg + weightKg)/2;
-  } else if (weightKg!=null){ target.weightKg = weightKg; }
-
-  if (calories!=null && !isNaN(calories)) target.calories = calories;
-  if (note!==undefined) target.note = note;
-  target.source = target.source || "manual";
-
-  // Clean up undefined fields
-  if (weightKg==null) delete target.weightKg;
-  if (calories==null) delete target.calories;
-  if (!note) delete target.note;
-
-  // If entry becomes empty, remove it
-  if (Object.keys(target).length===0) delete State.entries[CurrentDate];
-
-  saveState(); lastAction("Saved");
-  refreshAll();
-}
-function deleteEntry(dateISO){
-  if (!State.entries[dateISO]) return;
-  LastSnapshot = { date: dateISO, prev: {...State.entries[dateISO]} };
-  delete State.entries[dateISO];
-  saveState(); lastAction("Deleted");
-  refreshAll();
-}
-function undoLast(){
-  if (!LastSnapshot){ lastAction("Nothing to undo"); return; }
-  const {date, prev} = LastSnapshot;
-  if (prev) State.entries[date] = prev; else delete State.entries[date];
-  saveState(); lastAction("Undid");
-  refreshAll();
-}
-function lastAction(msg){ lastActionEl.textContent = msg; setTimeout(()=>lastActionEl.textContent="", 1200); }
-
-document.getElementById("btnSave").addEventListener('click', saveEntry);
-document.getElementById("btnDelete").addEventListener('click', ()=>{ deleteEntry(CurrentDate); });
-document.getElementById("btnUndo").addEventListener('click', undoLast);
-
-document.getElementById("prevDay").addEventListener('click', ()=>moveDay(-1));
-document.getElementById("nextDay").addEventListener('click', ()=>moveDay(1));
-
-function moveDay(delta){
-  const d=new Date(CurrentDate+"T00:00:00"); d.setDate(d.getDate()+delta);
-  setDate(toISO(d));
-}
-
-function swipe(container){
-  let sx=null, sy=null;
-  container.addEventListener('touchstart', e=>{ const t=e.touches[0]; sx=t.clientX; sy=t.clientY; }, {passive:true});
-  container.addEventListener('touchend', e=>{
-    if (sx==null||sy==null) return;
-    const t=e.changedTouches[0]; const dx=t.clientX-sx; const dy=t.clientY-sy;
-    if (Math.abs(dx)>50 && Math.abs(dy)<40){ if (dx<0) moveDay(1); else moveDay(-1); }
-    sx=sy=null;
-  });
-}
-swipe(document.getElementById("dailyCard"));
-
-/*** Confidence badge & gating ***/
-const confBadge = document.getElementById("confBadge");
-const windowMeta = document.getElementById("windowMeta");
-
-function setConfidenceBadge(q){
-  const score = (q.daysWithWeight>=21?1:0) + (q.windowCoveragePct>=70?1:0) + ((q.r2??0)>=0.6?1:0);
-  let cls="low", label="Low";
-  if (score===2) { cls="med"; label="Medium"; }
-  if (score===3) { cls="high"; label="High"; }
-  confBadge.className = "conf "+cls;
-  confBadge.textContent = "Estimation confidence: "+label;
-}
-
-/*** Graph (Canvas) ***/
-let graphRange = State.settings.defaultRange || "3m";
-const chart = document.getElementById("chart");
-const ctx = chart.getContext("2d");
-const chkWeight = document.getElementById("showWeight");
-const chkCal = document.getElementById("showCalories");
-const chkTrend = document.getElementById("showTrend");
-const chkCalMA = document.getElementById("showCalMA");
-const axisUnit = document.getElementById("axisUnit");
-
-document.querySelectorAll('.range button').forEach(b=>{
-  b.addEventListener('click', ()=>{
-    document.querySelectorAll('.range button').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active'); graphRange = b.dataset.range; drawChart();
-  });
-});
-[chkWeight,chkCal,chkTrend,chkCalMA].forEach(el=>el.addEventListener('change', drawChart));
-
-function rangeFilter(data){
-  if (graphRange==="all" || data.length===0) return data;
-  const end = new Date(data[data.length-1].date + "T00:00:00");
-  const backDays = graphRange==="1m"?31:graphRange==="3m"?93:graphRange==="6m"?186:365;
-  const start = new Date(end.getTime() - backDays*86400000);
-  return data.filter(d=> new Date(d.date+"T00:00:00") >= start);
-}
-
-function drawChart(){
-  const unit = State.settings.unitSystem;
-  axisUnit.textContent = unit==="metric" ? "kg" : "lb";
-  const arr = entriesArray();
-  const data = arr.map(r=>({
-    date: r.date,
-    weight: r.weightKg==null? null : (unit==="metric"? r.weightKg : kgToLb(r.weightKg)),
-    calories: r.calories??null
-  }));
-  const filtered = rangeFilter(data);
-  // Build scales
-  const pad=40, W=chart.width, H=chart.height;
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = "rgba(255,255,255,0.9)";
-  ctx.fillRect(0,0,W,H);
-
-  // x scale
-  const xs = filtered.map(d=>new Date(d.date+"T00:00:00").getTime());
-  if (xs.length===0){ ctx.fillStyle="#666"; ctx.fillText("No data", W/2-20, H/2); return; }
-  const xMin = Math.min(...xs), xMax = Math.max(...xs);
-  const x = t => pad + ( (t - xMin) / Math.max(1,(xMax-xMin)) ) * (W - pad*2);
-
-  // y scales
-  const wVals = filtered.filter(d=>d.weight!=null).map(d=>d.weight);
-  const cVals = filtered.filter(d=>d.calories!=null).map(d=>d.calories);
-  const wyMin = Math.min(...wVals, 999999), wyMax = Math.max(...wVals, -999999);
-  const cyMin = Math.min(...cVals, 999999), cyMax = Math.max(...cVals, -999999);
-  const wPad = (wyMax-wyMin)||1, cPad=(cyMax-cyMin)||1;
-  const yW = v => H - pad - ((v - wyMin + 0.05*wPad) / (wPad*1.1)) * (H - pad*2);
-  const yC = v => H - pad - ((v - cyMin + 0.05*cPad) / (cPad*1.1)) * (H - pad*2);
-
-  // axes
-  ctx.strokeStyle="#ccd"; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(pad, pad); ctx.lineTo(pad, H-pad); ctx.lineTo(W-pad, H-pad); ctx.stroke();
-  ctx.fillStyle="#556";
-  ctx.fillText(unit==="metric"?"Weight (kg)":"Weight (lb)", 8, 16);
-  ctx.fillText("Calories (kcal)", W-120, 16);
-
-  // grid (light)
-  ctx.strokeStyle="rgba(0,0,0,0.05)";
-  for(let i=0;i<5;i++){ const yy=pad + i*(H-2*pad)/4; ctx.beginPath(); ctx.moveTo(pad, yy); ctx.lineTo(W-pad, yy); ctx.stroke(); }
-
-  // weight scatter
-  if (chkWeight.checked){
-    ctx.fillStyle="#0a84ff";
-    filtered.forEach(d=>{
-      if (d.weight==null) return;
-      const px=x(new Date(d.date+"T00:00:00").getTime()), py=yW(d.weight);
-      ctx.beginPath(); ctx.arc(px,py,3,0,Math.PI*2); ctx.fill();
-    });
-  }
-
-  // calories line
-  if (chkCal.checked){
-    ctx.strokeStyle="#ff3b30"; ctx.lineWidth=1.6; ctx.beginPath();
-    let started=false;
-    filtered.forEach(d=>{
-      if (d.calories==null) { started=false; return; }
-      const px=x(new Date(d.date+"T00:00:00").getTime()), py=yC(d.calories);
-      if (!started){ ctx.moveTo(px,py); started=true; } else { ctx.lineTo(px,py); }
-    });
-    ctx.stroke();
-  }
-
-  // calories MA
-  if (chkCalMA.checked){
-    const calSeries = filtered.filter(d=>d.calories!=null).map(d=>({date:d.date, value:d.calories}));
-    const ma = movingAverage(calSeries, 7);
-    ctx.strokeStyle="#ff9f0a"; ctx.lineWidth=1.6; ctx.beginPath();
-    ma.forEach((d,i)=>{
-      const px=x(new Date(d.date+"T00:00:00").getTime()), py=yC(d.value);
-      if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
-    });
-    ctx.stroke();
-  }
-
-  // trend line for regression window
-  if (chkTrend.checked){
-    const calc = computeAll();
-    if (calc.slopeKgPerDay!=null && calc.intercept!=null){
-      // Draw only where we have filtered dates intersecting regression window source
-      const arrAll = entriesArray();
-      const regWindow = withinDays(arrAll, State.settings.regressionWindowDays, "weightKg");
-      // Build index mapping against regWindow order
-      const dateToIndex = new Map(regWindow.map((r,i)=>[r.date,i]));
-      // Trend points for filtered dates that exist in regWindow
-      const tPts = filtered
-        .filter(d=>dateToIndex.has(d.date))
-        .map(d=>{
-          const idx = dateToIndex.get(d.date);
-          const w = calc.slopeKgPerDay*idx + calc.intercept;
-          return {date:d.date, weight: (State.settings.unitSystem==="metric"? w : kgToLb(w))};
-        });
-      if (tPts.length){
-        ctx.strokeStyle="#34c759"; ctx.lineWidth=2; ctx.beginPath();
-        tPts.forEach((d,i)=>{
-          const px=x(new Date(d.date+"T00:00:00").getTime()), py=yW(d.weight);
-          if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
-        });
-        ctx.stroke();
-      }
-    }
-  }
-}
-
-/*** Table ***/
-let tableSort = { key:"date", asc:false };
-const tbody = document.querySelector("#table tbody");
-const chkAll = document.getElementById("chkAll");
-document.querySelectorAll('#table thead th[data-sort]').forEach(th=>{
-  th.addEventListener('click', ()=>{
-    const key = th.dataset.sort;
-    if (tableSort.key===key) tableSort.asc=!tableSort.asc; else { tableSort.key=key; tableSort.asc=false; }
-    renderTable();
-  });
-});
-chkAll.addEventListener('change', ()=>{
-  tbody.querySelectorAll('input[type=checkbox]').forEach(cb=>cb.checked = chkAll.checked);
-});
-document.getElementById("btnDeleteSelected").addEventListener('click', ()=>{
-  const cbs = Array.from(tbody.querySelectorAll('input[type=checkbox]')).filter(cb=>cb.checked);
-  if (!cbs.length) return;
-  cbs.forEach(cb=>{ const d = cb.dataset.date; delete State.entries[d]; });
-  saveState(); renderTable(); refreshAll();
-});
-
-function renderTable(){
-  const calc = computeAll();
-  const need = calc.needToEat;
-  const rows = entriesArray();
-  rows.sort((a,b)=>{
-    const ka = tableSort.key==="date"? a.date : (tableSort.key==="weightKg" ? (a.weightKg??-Infinity) : (a.calories??-Infinity));
-    const kb = tableSort.key==="date"? b.date : (tableSort.key==="weightKg" ? (b.weightKg??-Infinity) : (b.calories??-Infinity));
-    if (ka<kb) return tableSort.asc? -1 : 1;
-    if (ka>kb) return tableSort.asc? 1 : -1;
-    return 0;
-  });
-  tbody.innerHTML = rows.map(r=>{
-    const delta = (need!=null && r.calories!=null) ? (r.calories - need) : null;
-    const cls = delta==null? "" : (delta>0? 'style="color:#ff3b30"' : 'style="color:#34c759"');
-    return `<tr>
-      <td><input type="checkbox" data-date="${r.date}"></td>
-      <td>${r.date}</td>
-      <td>${r.weightKg!=null ? r.weightKg.toFixed(2) : '—'}</td>
-      <td>${r.calories!=null ? Math.round(r.calories) : '—'}</td>
-      <td ${cls}>${delta!=null ? (delta>0?'+':'')+Math.round(delta) : '—'}</td>
-      <td>${r.note??''}</td>
-    </tr>`;
-  }).join("");
-}
-
-/*** Import/Export ***/
-document.getElementById("fileCSV").addEventListener('change', ev=>{
-  const f=ev.target.files[0]; if (!f) return;
-  const lbs = document.getElementById("chkCSVlbs").checked;
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    try{
-      const text = String(reader.result);
-      const {rows, count} = parseCSV(text, lbs);
-      for(const r of rows){
-        const cur = State.entries[r.date] || {};
-        State.entries[r.date] = {...cur, ...r, source: "import"};
-      }
-      saveState();
-      document.getElementById("importStatus").textContent = `Imported ${count} rows`;
-      refreshAll();
-    }catch(e){ document.getElementById("importStatus").textContent = "Import error"; }
-  };
-  reader.readAsText(f);
-});
-
-function parseCSV(text, lbs){
-  const lines = text.split(/\r?\n/).filter(l=>l.trim().length>0);
-  if (lines.length<2) return {rows:[], count:0};
-  const head = lines[0].split(",").map(s=>s.trim().toLowerCase());
-  const di = head.findIndex(h=>h==="date");
-  const wi = head.findIndex(h=>h==="weightkg"||h==="weight");
-  const ci = head.findIndex(h=>h==="calories");
-  if (di<0) throw new Error("No date col");
-  const map = {};
-  for (let i=1;i<lines.length;i++){
-    const cols = splitCSVLine(lines[i]);
-    const date = cols[di]?.slice(0,10); if (!date) continue;
-    const e = map[date] || {date};
-    if (wi>=0 && cols[wi]!=="" && !isNaN(Number(cols[wi]))){
-      const w = Number(cols[wi]); e.weightKg = lbs ? lbToKg(w) : w;
-    }
-    if (ci>=0 && cols[ci]!=="" && !isNaN(Number(cols[ci]))){
-      e.calories = Number(cols[ci]);
-    }
-    map[date]=e;
-  }
-  return { rows: Object.values(map), count: Object.keys(map).length };
-}
-function splitCSVLine(line){
-  const res=[]; let cur=""; let q=false;
-  for (let i=0;i<line.length;i++){
-    const ch=line[i];
-    if (ch==='\"'){ q=!q; continue; }
-    if (ch===',' && !q){ res.push(cur); cur=""; continue; }
-    cur+=ch;
-  }
-  res.push(cur); return res.map(s=>s.trim());
-}
-
-document.getElementById("btnExportCSV").addEventListener('click', ()=>{
-  const rows = entriesArray();
-  const lines = [["date","weightKg","calories","note","source"].join(",")];
-  rows.forEach(r=>lines.push([r.date, r.weightKg??"", r.calories??"", r.note??"", r.source??""].join(",")));
-  const blob = new Blob([lines.join("\n")], {type:"text/csv"});
-  const url = URL.createObjectURL(blob); const a=document.createElement('a');
-  a.href=url; a.download="adaptive_tdee_export.csv"; a.click(); URL.revokeObjectURL(url);
-});
-document.getElementById("btnExportJSON").addEventListener('click', ()=>{
-  const blob = new Blob([JSON.stringify({ entries: State.entries, settings: State.settings }, null, 2)], {type:"application/json"});
-  const url = URL.createObjectURL(blob); const a=document.createElement('a');
-  a.href=url; a.download="adaptive_tdee_backup.json"; a.click(); URL.revokeObjectURL(url);
-});
-
-/*** Settings ***/
-const sTarget = document.getElementById("sTarget");
-const sTargetVal = document.getElementById("sTargetVal");
-const sUnit = document.getElementById("sUnit");
-const sReg = document.getElementById("sReg");
-const sCalWin = document.getElementById("sCalWin");
-const sRollover = document.getElementById("sRollover");
-const sTrim = document.getElementById("sTrim");
-const sAvgDaily = document.getElementById("sAvgDaily");
-const sShowBand = document.getElementById("sShowBand");
-const sRange = document.getElementById("sRange");
-const sPIN = document.getElementById("sPIN");
-
-function bindSettings(){
-  const S = State.settings;
-  sTarget.value = S.targetWeeklyChangeKg;
-  sTargetVal.textContent = S.targetWeeklyChangeKg.toFixed(2);
-  sUnit.value = S.unitSystem;
-  sReg.value = S.regressionWindowDays;
-  sCalWin.value = S.calorieAvgWindowDays;
-  sRollover.value = S.dayRollOverHour;
-  sTrim.value = S.outlierTrimPct;
-  sAvgDaily.checked = S.averageDailyWeights;
-  sShowBand.checked = S.showBand;
-  sRange.value = S.defaultRange;
-  sPIN.value = S.passcode || "";
-}
-
-[sTarget,sUnit,sReg,sCalWin,sRollover,sTrim,sAvgDaily,sShowBand,sRange,sPIN].forEach(el=>el.addEventListener('input', ()=>{
-  const S=State.settings;
-  if (el===sTarget){ S.targetWeeklyChangeKg = Number(sTarget.value); sTargetVal.textContent=S.targetWeeklyChangeKg.toFixed(2); }
-  if (el===sUnit){ S.unitSystem = sUnit.value; document.getElementById("unitLabel").textContent = (S.unitSystem==="metric"?"kg":"lb"); }
-  if (el===sReg){ S.regressionWindowDays = clamp(Number(sReg.value),21,84); }
-  if (el===sCalWin){ S.calorieAvgWindowDays = clamp(Number(sCalWin.value),14,84); }
-  if (el===sRollover){ S.dayRollOverHour = clamp(Number(sRollover.value),0,23); }
-  if (el===sTrim){ S.outlierTrimPct = clamp(Number(sTrim.value),0,5); }
-  if (el===sAvgDaily){ S.averageDailyWeights = sAvgDaily.checked; }
-  if (el===sShowBand){ S.showBand = sShowBand.checked; }
-  if (el===sRange){ S.defaultRange = sRange.value; }
-  if (el===sPIN){ S.passcode = sPIN.value? sPIN.value : null; }
-  saveState(); refreshAll();
-}));
-
-document.getElementById("btnReset").addEventListener('click', ()=>{
-  if (!confirm("Reset all local data?")) return;
-  State = structuredClone(Defaults);
-  saveState(); location.reload();
-});
-
-/*** Onboarding & Passcode ***/
-const ob = document.getElementById("ob");
-const gate = document.getElementById("gate");
-document.getElementById("obStart").addEventListener('click', ()=>{ localStorage.setItem("obDone","1"); ob.classList.add("hidden"); });
-document.getElementById("obSample").addEventListener('click', ()=>{
-  const rows=[]; const start=new Date(); start.setDate(start.getDate()-60);
-  let w=80.0;
-  for(let i=0;i<60;i++){
-    const d=new Date(start.getTime()+i*86400000);
-    const date=toISO(d);
-    const calories=2400 + Math.round((Math.sin(i/4)*100)+(Math.random()*100-50));
-    w += (Math.random()*0.2-0.1);
-    rows.push({date, calories, weightKg:w, source:"import"});
-  }
-  rows.forEach(r=> State.entries[r.date]=r);
-  saveState(); localStorage.setItem("obDone","1"); ob.classList.add("hidden");
-  refreshAll();
-});
-document.getElementById("btnUnlock").addEventListener('click', ()=>{
-  const pin = document.getElementById("gatePIN").value;
-  if (pin===(State.settings.passcode||"")) gate.classList.add("hidden"); else alert("Incorrect PIN");
-});
-
-/*** Render Readouts ***/
-function refreshAll(){
-  // set date label & inputs
-  setDate(CurrentDate);
-
-  // calculations
-  const calc = computeAll();
-  const unit = State.settings.unitSystem;
-  document.getElementById("kNeed").textContent = fmtKcal(calc.needToEat);
-  document.getElementById("kTDEE").textContent = fmtKcal(calc.TDEE);
-  document.getElementById("kDelta").textContent = (calc.calorieChangeNeeded==null? "— kcal/day" : ( (calc.calorieChangeNeeded>=0?"+":"") + Math.round(calc.calorieChangeNeeded) + " kcal/day"));
-  document.getElementById("kChange").textContent = fmtDeltaKgPerWeek(calc.currentWeightChangeKgPerWeek, unit);
-  document.getElementById("unitLabel").textContent = unit==="metric"?"kg":"lb";
-
-  // confidence & meta
-  setConfidenceBadge(calc.dataQuality);
-  windowMeta.textContent = `Regression: ${State.settings.regressionWindowDays}d · Calorie window: ${State.settings.calorieAvgWindowDays}d`;
-
-  // gating message
-  const g = (calc.dataQuality.daysWithWeight<21) ? "Collect at least 3 weeks of weight data for TDEE." : "";
-  const varianceWarn = (calc.dataQuality.daysWithWeight>=21 && (calc.dataQuality.r2??0) < 0.4) ? "High day-to-day weight variance; results may take longer to stabilize." : "";
-  gateMsg.innerHTML = `<span class="warn">${g}</span> ${varianceWarn?'<span class="warn"> '+varianceWarn+'</span>':''}`;
-
-  // chart/table (if visible)
-  if (!pages.graph.classList.contains('hidden')) drawChart();
-  if (!pages.table.classList.contains('hidden')) renderTable();
-}
-
-/*** Init ***/
-(function init(){
-  // default tab is daily
-  bindSettings();
-  setDate(CurrentDate);
-  refreshAll();
-
-  // onboarding
-  if (!localStorage.getItem("obDone")) ob.classList.remove("hidden");
-
-  // passcode gate
-  if (State.settings.passcode){ gate.classList.remove("hidden"); }
-
-  // unit axis label
-  axisUnit.textContent = State.settings.unitSystem==="metric" ? "kg" : "lb";
-})();
-</script>
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased font-sans">
+    
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo, useRef } = React;
+
+        // --- CONSTANTS & DEFAULTS ---
+        const ENERGY_EQUIVALENCE = 7700; // kcal per kg
+        const KG_TO_LBS = 2.20462;
+        const DEFAULT_SETTINGS = {
+            targetWeeklyChangeKg: 0.0,
+            regressionWindowDays: 49,
+            calorieAvgWindowDays: 49,
+            unitSystem: 'metric',
+            dayRollOverHour: 4,
+            outlierTrimPct: 0,
+            chartSmoothing: true,
+        };
+
+        // --- DATABASE HELPERS (using idb-keyval) ---
+        const db = {
+            getEntries: () => idbKeyval.get('entries'),
+            saveEntries: (entries) => idbKeyval.set('entries', entries),
+            getSettings: () => idbKeyval.get('settings'),
+            saveSettings: (settings) => idbKeyval.set('settings', settings),
+            clearAll: () => idbKeyval.clear(),
+        };
+
+        // --- DATE & UTILITY FUNCTIONS ---
+        const getDayKey = (date, rollOverHour = 4) => {
+            const d = new Date(date);
+            d.setHours(d.getHours() - rollOverHour);
+            return d.toISOString().split('T')[0];
+        };
+
+        const addDays = (date, days) => {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        };
+        
+        const formatDate = (date) => new Date(date).toISOString().split('T')[0];
+        const formatNumber = (num, digits = 0) => (num && isFinite(num)) ? num.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : '–';
+        
+        // --- CORE CALCULATION ENGINE ---
+        const calculateOLS = (dataPoints) => {
+            if (dataPoints.length < 2) return { slope: 0, intercept: 0, rSquared: 0 };
+            
+            let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0, sumYY = 0;
+            const n = dataPoints.length;
+
+            dataPoints.forEach(({ x, y }) => {
+                sumX += x;
+                sumY += y;
+                sumXY += x * y;
+                sumXX += x * x;
+                sumYY += y * y;
+            });
+
+            const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+            const intercept = (sumY - slope * sumX) / n;
+            const rNumerator = (n * sumXY - sumX * sumY);
+            const rDenominator = Math.sqrt((n * sumXX - sumX * sumX) * (n * sumYY - sumY * sumY));
+            
+            if (rDenominator === 0) return { slope: slope || 0, intercept: intercept || 0, rSquared: 0 };
+            
+            const r = rNumerator / rDenominator;
+            const rSquared = r * r;
+
+            return { slope, intercept, rSquared };
+        };
+
+        const calculateDerivedData = (entries, settings) => {
+            const today = new Date();
+            const todayKey = getDayKey(today, settings.dayRollOverHour);
+            const entriesObj = entries.reduce((acc, entry) => {
+                acc[entry.date] = entry;
+                return acc;
+            }, {});
+
+            // 1. Filter data for regression window
+            const regressionEndDate = today;
+            const regressionStartDate = addDays(regressionEndDate, -settings.regressionWindowDays);
+
+            let weightPoints = [];
+            for (let d = new Date(regressionStartDate); d <= regressionEndDate; d.setDate(d.getDate() + 1)) {
+                const dayKey = formatDate(d);
+                const entry = entriesObj[dayKey];
+                if (entry && entry.weightKg) {
+                    const dateIndex = (new Date(dayKey).getTime() - new Date(formatDate(regressionStartDate)).getTime()) / (1000 * 3600 * 24);
+                    weightPoints.push({ x: dateIndex, y: parseFloat(entry.weightKg) });
+                }
+            }
+
+            // 2. Outlier Trimming
+            if (settings.outlierTrimPct > 0 && weightPoints.length > 2) {
+                weightPoints.sort((a, b) => a.y - b.y);
+                const trimCount = Math.floor(weightPoints.length * (settings.outlierTrimPct / 100));
+                if (trimCount > 0) {
+                    weightPoints = weightPoints.slice(trimCount, weightPoints.length - trimCount);
+                }
+            }
+
+            const { slope: slopeKgPerDay, rSquared } = weightPoints.length >= 21 ? calculateOLS(weightPoints) : { slope: 0, rSquared: 0 };
+
+            // 3. Filter data for calorie averaging
+            const calorieEndDate = today;
+            const calorieStartDate = addDays(calorieEndDate, -settings.calorieAvgWindowDays);
+            const calorieEntries = entries
+                .filter(e => e.calories && new Date(e.date) >= calorieStartDate && new Date(e.date) <= calorieEndDate)
+                .map(e => parseFloat(e.calories));
+            
+            const avgCalories = calorieEntries.length > 0 ? calorieEntries.reduce((a, b) => a + b, 0) / calorieEntries.length : 0;
+
+            // 4. Calculate final metrics
+            if (weightPoints.length < 21 || avgCalories === 0) {
+                return {
+                    TDEE: null, needToEat: null, calorieChangeNeeded: null, currentWeightChangeKgPerWeek: null,
+                    dataQuality: {
+                        daysWithWeight: weightPoints.length, daysWithCalories: calorieEntries.length, rSquared,
+                        windowCoverage: (weightPoints.length / settings.regressionWindowDays) * 100,
+                    },
+                };
+            }
+            
+            const deltaKcalPerDay = slopeKgPerDay * ENERGY_EQUIVALENCE;
+            const TDEE = avgCalories - deltaKcalPerDay;
+            
+            const targetDeltaPerDay = (settings.targetWeeklyChangeKg / 7) * ENERGY_EQUIVALENCE;
+            const needToEat = TDEE + targetDeltaPerDay;
+            
+            const calorieChangeNeeded = needToEat - avgCalories;
+            const currentWeightChangeKgPerWeek = slopeKgPerDay * 7;
+            
+            return {
+                TDEE,
+                needToEat,
+                calorieChangeNeeded,
+                currentWeightChangeKgPerWeek,
+                dataQuality: {
+                    daysWithWeight: weightPoints.length,
+                    daysWithCalories: calorieEntries.length,
+                    rSquared,
+                    windowCoverage: (weightPoints.length / settings.regressionWindowDays) * 100,
+                },
+            };
+        };
+
+
+        // --- REACT COMPONENTS ---
+
+        const Icon = ({ name, className }) => {
+            const icons = {
+                calendar: <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M-4.5 12h22.5" />,
+                chart: <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1.5-1.5m1.5 1.5l1.5-1.5m-7.5 0l3.75-3.75M11.25 12l-3.75-3.75m0 0l-3.75 3.75m3.75-3.75L15 15.75" />,
+                settings: <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-1.003 1.11-1.226M15 20.25a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM12 12.75a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5zM12 6.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM12 18.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM8.038 9.462c-.56-.223-1.02-.693-1.226-1.11M3.75 9.75a2.25 2.25 0 10-4.5 0 2.25 2.25 0 004.5 0zM4.156 5.062c.223-.56.694-1.02 1.11-1.226M9.75 3.75a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM19.844 18.938c.56.223 1.02.693 1.226 1.11M20.25 14.25a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM18.938 8.038c-.223.56-.693 1.02-1.11 1.226M14.25 20.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM19.844 5.062c-.56-.223-1.02-.694-1.226-1.11M14.25 3.75a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5z" />,
+                chevronLeft: <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />,
+                chevronRight: <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />,
+                info: <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />,
+            };
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+                    {icons[name]}
+                </svg>
+            );
+        };
+        
+        const ResultCard = ({ derivedData, settings }) => {
+            const getConfidenceBadge = (quality) => {
+                if (!quality || quality.daysWithWeight < 21) return <span className="text-xs font-medium text-yellow-600 dark:text-yellow-400">Collecting data... ({quality.daysWithWeight}/21 days)</span>;
+                if (quality.rSquared < 0.25) return <span className="text-xs font-medium text-orange-600 dark:text-orange-400">Low Confidence (R² {formatNumber(quality.rSquared, 2)})</span>;
+                if (quality.rSquared < 0.6) return <span className="text-xs font-medium text-yellow-600 dark:text-yellow-400">Medium Confidence (R² {formatNumber(quality.rSquared, 2)})</span>;
+                return <span className="text-xs font-medium text-green-600 dark:text-green-400">High Confidence (R² {formatNumber(quality.rSquared, 2)})</span>;
+            };
+
+            const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg';
+            const changeVal = settings.unitSystem === 'imperial' ? derivedData.currentWeightChangeKgPerWeek * KG_TO_LBS : derivedData.currentWeightChangeKgPerWeek;
+
+            return (
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 space-y-4">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-lg font-bold">Your Numbers</h2>
+                        {derivedData && getConfidenceBadge(derivedData.dataQuality)}
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Need to Eat</p>
+                            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{formatNumber(derivedData.needToEat)} <span className="text-base font-normal">kcal</span></p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Adaptive TDEE</p>
+                            <p className="text-2xl font-bold">{formatNumber(derivedData.TDEE)} <span className="text-base font-normal">kcal</span></p>
+                        </div>
+                    </div>
+                    <div className="border-t border-gray-200 dark:border-gray-700 pt-4 grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Required Change</p>
+                             <p className={`text-lg font-semibold ${derivedData.calorieChangeNeeded > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                {derivedData.calorieChangeNeeded > 0 ? '+' : ''}{formatNumber(derivedData.calorieChangeNeeded)} kcal/day
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Current Trend</p>
+                            <p className={`text-lg font-semibold ${derivedData.currentWeightChangeKgPerWeek > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                {derivedData.currentWeightChangeKgPerWeek > 0 ? '+' : ''}{formatNumber(changeVal, 2)} {weightUnit}/week
+                            </p>
+                        </div>
+                    </div>
+                     {derivedData.TDEE === null && (
+                        <div className="mt-4 p-3 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 rounded-lg text-sm flex items-center space-x-2">
+                            <Icon name="info" className="w-5 h-5 flex-shrink-0" />
+                            <span>Keep logging weight and calories daily. Your adaptive TDEE will appear after at least 3 weeks of consistent weight data.</span>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const DailyEntryScreen = ({ currentDay, setCurrentDay, entries, setEntries, derivedData, settings }) => {
+            const currentDayKey = getDayKey(currentDay, settings.dayRollOverHour);
+            const currentEntry = entries.find(e => e.date === currentDayKey) || { date: currentDayKey, weightKg: '', calories: '' };
+            
+            const [weightInput, setWeightInput] = useState('');
+            const [caloriesInput, setCaloriesInput] = useState('');
+
+            useEffect(() => {
+                const weight = currentEntry.weightKg || '';
+                const displayWeight = settings.unitSystem === 'imperial' && weight ? (weight * KG_TO_LBS).toFixed(1) : weight;
+                setWeightInput(displayWeight);
+                setCaloriesInput(currentEntry.calories || '');
+            }, [currentDayKey, currentEntry, settings.unitSystem]);
+
+            const handleSave = useCallback(() => {
+                const newEntries = [...entries];
+                const entryIndex = newEntries.findIndex(e => e.date === currentDayKey);
+                
+                const weightKgValue = settings.unitSystem === 'imperial' ? (parseFloat(weightInput) / KG_TO_LBS) : parseFloat(weightInput);
+                
+                const updatedEntry = {
+                    ...currentEntry,
+                    weightKg: isNaN(weightKgValue) ? null : weightKgValue,
+                    calories: caloriesInput === '' ? null : parseInt(caloriesInput, 10),
+                    source: 'manual',
+                };
+                
+                if (entryIndex > -1) {
+                    newEntries[entryIndex] = updatedEntry;
+                } else {
+                    newEntries.push(updatedEntry);
+                }
+                
+                // Filter out empty entries and sort
+                const cleanedEntries = newEntries.filter(e => e.weightKg != null || e.calories != null).sort((a,b) => new Date(a.date) - new Date(b.date));
+                setEntries(cleanedEntries);
+            }, [weightInput, caloriesInput, currentDayKey, entries, setEntries, settings.unitSystem]);
+
+            const changeDay = (amount) => {
+                handleSave();
+                setCurrentDay(prev => addDays(prev, amount));
+            };
+
+            const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg';
+            const today = new Date();
+            const isToday = getDayKey(today, settings.dayRollOverHour) === currentDayKey;
+
+            return (
+                <div className="p-4 space-y-6">
+                    <div className="flex items-center justify-between">
+                        <button onClick={() => changeDay(-1)} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"><Icon name="chevronLeft" className="w-6 h-6" /></button>
+                        <h1 className="text-xl font-bold text-center">
+                            {isToday ? 'Today' : currentDay.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
+                        </h1>
+                        <button onClick={() => changeDay(1)} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation" disabled={isToday}>
+                          <Icon name="chevronRight" className={`w-6 h-6 ${isToday ? 'text-gray-400 dark:text-gray-600' : ''}`} />
+                        </button>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div>
+                            <label htmlFor="weight" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Weight ({weightUnit})</label>
+                            <input
+                                id="weight"
+                                type="number"
+                                inputMode="decimal"
+                                value={weightInput}
+                                onChange={e => setWeightInput(e.target.value)}
+                                onBlur={handleSave}
+                                placeholder="e.g., 70.5"
+                                className="mt-1 block w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="calories" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Calories (kcal)</label>
+                            <input
+                                id="calories"
+                                type="number"
+                                inputMode="numeric"
+                                value={caloriesInput}
+                                onChange={e => setCaloriesInput(e.target.value)}
+                                onBlur={handleSave}
+                                placeholder="e.g., 2500"
+                                className="mt-1 block w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            />
+                        </div>
+                    </div>
+                    <ResultCard derivedData={derivedData} settings={settings} />
+                </div>
+            );
+        };
+
+        const ProgressChart = ({ entries, settings, derivedData }) => {
+            const chartRef = useRef(null);
+            const chartInstance = useRef(null);
+            
+            useEffect(() => {
+                if (!chartRef.current || !entries) return;
+                
+                const ctx = chartRef.current.getContext('2d');
+                
+                // Destroy previous chart instance
+                if (chartInstance.current) {
+                    chartInstance.current.destroy();
+                }
+
+                const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg';
+                const weightMultiplier = settings.unitSystem === 'imperial' ? KG_TO_LBS : 1;
+                
+                const labels = entries.map(e => new Date(e.date));
+                const weightData = entries.map(e => e.weightKg ? e.weightKg * weightMultiplier : null);
+                
+                let calorieData = entries.map(e => e.calories ? Number(e.calories) : null);
+                if (settings.chartSmoothing) {
+                    const movingAverage = (data, windowSize) => {
+                        let result = [];
+                        for (let i = 0; i < data.length; i++) {
+                            const window = data.slice(Math.max(0, i - windowSize + 1), i + 1);
+                            const nonNull = window.filter(v => v !== null);
+                            if (nonNull.length > 0) {
+                                result.push(nonNull.reduce((a, b) => a + b, 0) / nonNull.length);
+                            } else {
+                                result.push(null);
+                            }
+                        }
+                        return result;
+                    };
+                    calorieData = movingAverage(calorieData, 7);
+                }
+
+                // Trendline calculation
+                let trendlineData = [];
+                if (derivedData && derivedData.TDEE !== null) {
+                    const allPoints = entries.map(e => {
+                        if (e.weightKg) {
+                            return {
+                                x: new Date(e.date).getTime(),
+                                y: parseFloat(e.weightKg)
+                            };
+                        }
+                        return null;
+                    }).filter(Boolean);
+                    
+                    if (allPoints.length > 1) {
+                        const { slope, intercept } = calculateOLS(allPoints.map(p => ({
+                            x: (p.x - allPoints[0].x) / (1000 * 3600 * 24),
+                            y: p.y
+                        })));
+                        const startDateIndex = allPoints[0].x;
+                        trendlineData = allPoints.map(p => {
+                            const dateIndex = (p.x - startDateIndex) / (1000 * 3600 * 24);
+                            return (intercept + slope * dateIndex) * weightMultiplier;
+                        });
+                    }
+                }
+
+                chartInstance.current = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [
+                            {
+                                label: `Weight (${weightUnit})`,
+                                data: weightData,
+                                yAxisID: 'yWeight',
+                                borderColor: 'rgb(59, 130, 246)',
+                                backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                                type: 'scatter',
+                                pointRadius: 3,
+                                showLine: false,
+                            },
+                            {
+                                label: 'Weight Trend',
+                                data: trendlineData,
+                                yAxisID: 'yWeight',
+                                borderColor: 'rgba(59, 130, 246, 0.5)',
+                                borderWidth: 2,
+                                pointRadius: 0,
+                                type: 'line',
+                                fill: false,
+                                tension: 0.1,
+                            },
+                            {
+                                label: 'Calories (kcal)',
+                                data: calorieData,
+                                yAxisID: 'yCalories',
+                                borderColor: 'rgb(234, 179, 8)',
+                                borderWidth: 2,
+                                pointRadius: 0,
+                                tension: 0.4,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: { unit: 'day' },
+                                grid: { color: 'rgba(128, 128, 128, 0.2)' }
+                            },
+                            yWeight: {
+                                type: 'linear',
+                                position: 'left',
+                                title: { display: true, text: `Weight (${weightUnit})` },
+                                grid: { color: 'rgba(128, 128, 128, 0.2)' }
+                            },
+                            yCalories: {
+                                type: 'linear',
+                                position: 'right',
+                                title: { display: true, text: 'Calories (kcal)' },
+                                grid: { drawOnChartArea: false } // only show grid for weight axis
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        }
+                    }
+                });
+
+            }, [entries, settings, derivedData]); // Re-render chart when data changes
+            
+            return (
+                <div className="p-4">
+                    <div className="chart-container">
+                        <canvas ref={chartRef}></canvas>
+                    </div>
+                </div>
+            );
+        };
+        
+        const ProgressTable = ({ entries, settings }) => {
+            const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg';
+            const weightMultiplier = settings.unitSystem === 'imperial' ? KG_TO_LBS : 1;
+
+            return (
+                 <div className="px-4">
+                    <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                        <table className="min-w-full divide-y-2 divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 text-sm">
+                            <thead className="text-left">
+                                <tr>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium">Date</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium">Weight ({weightUnit})</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium">Calories (kcal)</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                {[...entries].reverse().map(entry => (
+                                    <tr key={entry.date}>
+                                        <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white">{entry.date}</td>
+                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 dark:text-gray-200">
+                                            {entry.weightKg ? formatNumber(entry.weightKg * weightMultiplier, 1) : '–'}
+                                        </td>
+                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 dark:text-gray-200">
+                                            {entry.calories ? formatNumber(entry.calories, 0) : '–'}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        };
+        
+        const ProgressScreen = ({ entries, settings, derivedData }) => {
+            const [view, setView] = useState('graph'); // 'graph' or 'table'
+            return (
+                <div className="space-y-4">
+                    <div className="px-4 pt-4">
+                        <div className="p-1 bg-gray-200 dark:bg-gray-700 rounded-lg flex space-x-1">
+                            <button onClick={() => setView('graph')} className={`w-full py-2 text-sm font-semibold rounded-md ${view === 'graph' ? 'bg-white dark:bg-gray-900 shadow' : 'text-gray-600 dark:text-gray-300'}`}>Graph</button>
+                            <button onClick={() => setView('table')} className={`w-full py-2 text-sm font-semibold rounded-md ${view === 'table' ? 'bg-white dark:bg-gray-900 shadow' : 'text-gray-600 dark:text-gray-300'}`}>Table</button>
+                        </div>
+                    </div>
+                    {view === 'graph' ? <ProgressChart entries={entries} settings={settings} derivedData={derivedData} /> : <ProgressTable entries={entries} settings={settings} />}
+                </div>
+            );
+        };
+
+        const SettingsScreen = ({ settings, setSettings }) => {
+            const handleSettingChange = (key, value) => {
+                const newSettings = { ...settings, [key]: value };
+                setSettings(newSettings);
+            };
+
+            const handleExport = (format) => {
+                const data = {
+                    settings: settings,
+                    entries: db.getEntries()
+                };
+                let content, filename, mimeType;
+                
+                if (format === 'json') {
+                    content = JSON.stringify({settings, entries: (window.APP_STATE.entries || [])}, null, 2);
+                    filename = `adaptive_tdee_backup_${new Date().toISOString().split('T')[0]}.json`;
+                    mimeType = 'application/json';
+                } else { // csv
+                    const headers = 'date,weightKg,calories';
+                    const rows = (window.APP_STATE.entries || []).map(e => `${e.date},${e.weightKg || ''},${e.calories || ''}`).join('\n');
+                    content = `${headers}\n${rows}`;
+                    filename = `adaptive_tdee_export_${new Date().toISOString().split('T')[0]}.csv`;
+                    mimeType = 'text/csv';
+                }
+
+                const blob = new Blob([content], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            const handleImport = (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        if (file.name.endsWith('.json')) {
+                            const data = JSON.parse(e.target.result);
+                            if (data.settings && data.entries) {
+                                setSettings(data.settings);
+                                window.APP_STATE.setEntries(data.entries);
+                                alert('Import successful!');
+                            } else {
+                                throw new Error('Invalid JSON format.');
+                            }
+                        } else if (file.name.endsWith('.csv')) {
+                            const lines = e.target.result.split('\n');
+                            const headers = lines[0].trim().split(',');
+                            const dateIndex = headers.indexOf('date');
+                            const weightKgIndex = headers.indexOf('weightKg');
+                            const caloriesIndex = headers.indexOf('calories');
+                            
+                            if (dateIndex === -1) throw new Error('CSV must contain a "date" column.');
+                            
+                            const importedEntries = lines.slice(1).map(line => {
+                                const values = line.trim().split(',');
+                                const entry = { date: values[dateIndex] };
+                                if (weightKgIndex > -1 && values[weightKgIndex]) entry.weightKg = parseFloat(values[weightKgIndex]);
+                                if (caloriesIndex > -1 && values[caloriesIndex]) entry.calories = parseInt(values[caloriesIndex], 10);
+                                return entry;
+                            }).filter(e => e.weightKg || e.calories);
+                            
+                            // Merge with existing data
+                            const existingEntries = window.APP_STATE.entries || [];
+                            const entryMap = new Map(existingEntries.map(e => [e.date, e]));
+                            importedEntries.forEach(imp => entryMap.set(imp.date, imp));
+                            const merged = Array.from(entryMap.values()).sort((a,b) => new Date(a.date) - new Date(b.date));
+                            window.APP_STATE.setEntries(merged);
+                            alert('CSV import successful!');
+                        }
+                    } catch (error) {
+                        alert(`Import failed: ${error.message}`);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            const handleReset = () => {
+                if (confirm('Are you sure you want to delete all data? This cannot be undone.')) {
+                    db.clearAll().then(() => {
+                        window.APP_STATE.setEntries([]);
+                        setSettings(DEFAULT_SETTINGS);
+                        alert('All data has been cleared.');
+                    });
+                }
+            };
+            
+            const weightChange = settings.targetWeeklyChangeKg;
+            const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg';
+            const displayWeightChange = settings.unitSystem === 'imperial' ? (weightChange * KG_TO_LBS).toFixed(2) : weightChange.toFixed(2);
+
+            return (
+                <div className="p-4 space-y-8">
+                    <h1 className="text-2xl font-bold">Settings</h1>
+                    
+                    <div className="space-y-4">
+                        <h2 className="text-lg font-semibold">Goal</h2>
+                        <div>
+                            <label htmlFor="target" className="block text-sm font-medium">Target Weekly Weight Change: <span className="font-bold">{displayWeightChange} {weightUnit}</span></label>
+                            <input
+                                id="target"
+                                type="range"
+                                min="-1"
+                                max="1"
+                                step="0.05"
+                                value={settings.targetWeeklyChangeKg}
+                                onChange={e => handleSettingChange('targetWeeklyChangeKg', parseFloat(e.target.value))}
+                                className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                        <h2 className="text-lg font-semibold">Calculation Windows</h2>
+                        <div>
+                            <label htmlFor="regression" className="block text-sm font-medium">Weight Trend Window: <span className="font-bold">{settings.regressionWindowDays} days</span></label>
+                            <input id="regression" type="range" min="21" max="84" step="7" value={settings.regressionWindowDays} onChange={e => handleSettingChange('regressionWindowDays', parseInt(e.target.value))} className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer" />
+                        </div>
+                        <div>
+                            <label htmlFor="calories" className="block text-sm font-medium">Calorie Average Window: <span className="font-bold">{settings.calorieAvgWindowDays} days</span></label>
+                            <input id="calories" type="range" min="14" max="84" step="7" value={settings.calorieAvgWindowDays} onChange={e => handleSettingChange('calorieAvgWindowDays', parseInt(e.target.value))} className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer" />
+                        </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                         <h2 className="text-lg font-semibold">General</h2>
+                         <div className="flex items-center justify-between">
+                            <label className="text-sm font-medium">Unit System</label>
+                            <div className="flex items-center p-1 space-x-1 bg-gray-200 dark:bg-gray-700 rounded-lg">
+                                <button onClick={() => handleSettingChange('unitSystem', 'metric')} className={`px-3 py-1 text-sm font-semibold rounded-md ${settings.unitSystem === 'metric' ? 'bg-white dark:bg-gray-900 shadow' : ''}`}>Metric</button>
+                                <button onClick={() => handleSettingChange('unitSystem', 'imperial')} className={`px-3 py-1 text-sm font-semibold rounded-md ${settings.unitSystem === 'imperial' ? 'bg-white dark:bg-gray-900 shadow' : ''}`}>Imperial</button>
+                            </div>
+                         </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <h2 className="text-lg font-semibold">Data Management</h2>
+                        <div className="grid grid-cols-2 gap-2">
+                             <button onClick={() => handleExport('json')} className="w-full text-sm bg-gray-200 dark:bg-gray-700 py-2 rounded-md font-semibold">Export JSON</button>
+                             <button onClick={() => handleExport('csv')} className="w-full text-sm bg-gray-200 dark:bg-gray-700 py-2 rounded-md font-semibold">Export CSV</button>
+                             <label htmlFor="import-file" className="w-full text-center text-sm bg-blue-600 text-white py-2 rounded-md font-semibold cursor-pointer">Import Data</label>
+                             <input type="file" id="import-file" accept=".json,.csv" className="hidden" onChange={handleImport} />
+                             <button onClick={handleReset} className="w-full text-sm bg-red-600 text-white py-2 rounded-md font-semibold">Reset App</button>
+                        </div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">All data is stored locally on your device. It is never sent to a server. Exports are only created when you choose to.</p>
+                    </div>
+
+                </div>
+            );
+        };
+        
+        const Onboarding = ({ onComplete }) => {
+            const [step, setStep] = useState(1);
+            
+            const content = {
+                1: { title: "Welcome to Adaptive TDEE", text: "This app calculates your Total Daily Energy Expenditure (TDEE) based on your real-world data, not just a formula." },
+                2: { title: "How It Works", text: "Log your weight and calorie intake daily. After 3 weeks, the app will learn your metabolism and give you precise targets to reach your goal." },
+                3: { title: "Your Privacy", text: "All data you enter is stored securely on this device only. It is never uploaded or shared with anyone. You are in complete control." },
+            };
+
+            return (
+                 <div className="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-sm text-center space-y-4">
+                        <h2 className="text-2xl font-bold">{content[step].title}</h2>
+                        <p className="text-gray-600 dark:text-gray-300">{content[step].text}</p>
+                        <div className="flex justify-center space-x-2">
+                            {[1, 2, 3].map(i => <div key={i} className={`w-2 h-2 rounded-full ${i === step ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}`}></div>)}
+                        </div>
+                        {step < 3 ? (
+                            <button onClick={() => setStep(s => s + 1)} className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold">Next</button>
+                        ) : (
+                            <button onClick={onComplete} className="w-full bg-green-600 text-white py-2 rounded-md font-semibold">Get Started</button>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+
+        const App = () => {
+            const [loading, setLoading] = useState(true);
+            const [entries, setEntries] = useState([]);
+            const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+            const [currentDay, setCurrentDay] = useState(new Date());
+            const [activeScreen, setActiveScreen] = useState('daily');
+            const [showOnboarding, setShowOnboarding] = useState(false);
+            
+            // This is a bit of a hack to allow other components to update global state
+            // without excessive prop drilling in this single-file setup.
+            window.APP_STATE = { entries, setEntries };
+
+            useEffect(() => {
+                const loadData = async () => {
+                    const savedEntries = await db.getEntries() || [];
+                    const savedSettings = await db.getSettings();
+                    
+                    if (savedSettings) {
+                        setSettings({ ...DEFAULT_SETTINGS, ...savedSettings });
+                    } else {
+                        // First launch
+                        setShowOnboarding(true);
+                    }
+
+                    setEntries(savedEntries);
+                    setLoading(false);
+                };
+                loadData();
+            }, []);
+
+            useEffect(() => {
+                if (!loading) {
+                    db.saveEntries(entries);
+                }
+            }, [entries, loading]);
+
+            useEffect(() => {
+                if (!loading) {
+                    db.saveSettings(settings);
+                }
+            }, [settings, loading]);
+
+            const derivedData = useMemo(() => {
+                if (loading) return {};
+                return calculateDerivedData(entries, settings);
+            }, [entries, settings, loading]);
+
+            if (loading) {
+                return <div className="flex items-center justify-center h-screen"><p>Loading...</p></div>
+            }
+            
+            if (showOnboarding) {
+                return <Onboarding onComplete={() => setShowOnboarding(false)} />
+            }
+
+            return (
+                <div className="max-w-xl mx-auto flex flex-col h-screen">
+                    <main className="flex-grow overflow-y-auto pb-20">
+                        <div className={`screen ${activeScreen === 'daily' ? 'active' : ''}`}>
+                            <DailyEntryScreen 
+                                currentDay={currentDay}
+                                setCurrentDay={setCurrentDay}
+                                entries={entries}
+                                setEntries={setEntries}
+                                derivedData={derivedData}
+                                settings={settings}
+                            />
+                        </div>
+                        <div className={`screen ${activeScreen === 'progress' ? 'active' : ''}`}>
+                             <ProgressScreen entries={entries} settings={settings} derivedData={derivedData} />
+                        </div>
+                        <div className={`screen ${activeScreen === 'settings' ? 'active' : ''}`}>
+                            <SettingsScreen settings={settings} setSettings={setSettings} />
+                        </div>
+                    </main>
+
+                    <nav className="fixed bottom-0 left-0 right-0 max-w-xl mx-auto bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 bottom-nav">
+                        <div className="flex justify-around">
+                            <button onClick={() => setActiveScreen('daily')} className={`flex-1 py-2 flex flex-col items-center justify-center space-y-1 ${activeScreen === 'daily' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500'}`}>
+                                <Icon name="calendar" className="w-6 h-6" />
+                                <span className="text-xs font-medium">Daily</span>
+                            </button>
+                            <button onClick={() => setActiveScreen('progress')} className={`flex-1 py-2 flex flex-col items-center justify-center space-y-1 ${activeScreen === 'progress' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500'}`}>
+                                <Icon name="chart" className="w-6 h-6" />
+                                <span className="text-xs font-medium">Progress</span>
+                            </button>
+                            <button onClick={() => setActiveScreen('settings')} className={`flex-1 py-2 flex flex-col items-center justify-center space-y-1 ${activeScreen === 'settings' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500'}`}>
+                                <Icon name="settings" className="w-6 h-6" />
+                                <span className="text-xs font-medium">Settings</span>
+                            </button>
+                        </div>
+                    </nav>
+                </div>
+            );
+        };
+        
+        // --- PWA SETUP ---
+        const setupPWA = () => {
+             // 1. Inject Manifest
+            const manifest = {
+                "name": "Adaptive TDEE Calculator",
+                "short_name": "Adaptive TDEE",
+                "start_url": ".",
+                "display": "standalone",
+                "background_color": "#09090b",
+                "theme_color": "#18181b",
+                "description": "An adaptive TDEE calculator that learns from your data.",
+                "icons": [{
+                    "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAKeSURBVHja7dwhAQAgEAAh+Vd7gC98gQkCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+DDj3AQIAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQJZPJxZfVvLAAAAAElFTkSuQmCC",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }, {
+                    "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAP6SURBVHja7d0BDQAgEACx/Vf7gL/8jQkCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"},"sizes":"512x512","type":"image/png"}]
+            };
+            const stringifiedManifest = JSON.stringify(manifest);
+t            const blob = new Blob([stringifiedManifest], {type: 'application/json'});
+            const manifestURL = URL.createObjectURL(blob);
+            const link = document.createElement('link');
+            link.rel = 'manifest';
+            link.href = manifestURL;
+            document.head.appendChild(link);
+
+             // 2. Register Service Worker
+            if ('serviceWorker' in navigator) {
+                const swContent = `
+                    const CACHE_NAME = 'adaptive-tdee-cache-v1';
+                    const urlsToCache = [
+                        '/', 
+                        'https://unpkg.com/react@18/umd/react.production.min.js',
+                        'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
+                        'https://unpkg.com/@babel/standalone/babel.min.js',
+                        'https://cdn.tailwindcss.com',
+                        'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
+                        'https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js',
+                        'https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js'
+                    ];
+
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME).then(cache => {
+                                console.log('Opened cache');
+                                // Cache the app shell. Note: the root '/' will cache the index.html itself.
+                                return cache.addAll(urlsToCache);
+                            })
+                        );
+                    });
+
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request).then(response => {
+                                // Cache hit - return response
+                                if (response) {
+                                    return response;
+                                }
+                                return fetch(event.request);
+                            })
+                        );
+                    });
+                `;
+                const swBlob = new Blob([swContent], {type: 'application/javascript'});
+                const swUrl = URL.createObjectURL(swBlob);
+
+                navigator.serviceWorker.register(swUrl)
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            }
+        };
+
+        setupPWA();
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+    </script>
+
 </body>
 </html>
