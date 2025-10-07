@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Adaptive TDEE</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -10,20 +10,17 @@
     <meta name="apple-mobile-web-app-title" content="Adaptive TDEE">
     <meta name="theme-color" content="#18181b">
 
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMWEyOTI3Ij48L3JlY3Q+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MCIgZmlsbD0iI2YwZjBmMSI+QTwvdGV4dD48dGV4dCB4PSI1MCUiIHk9Ijc1JSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNizeU9IjI0IiBmaWxsPSIjZjBmMGYxIj5UPC90ZXh0Pjwvc3ZnPg==">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMWEyOTI3Ij48L3JlY3Q+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MCIgZmlsbD0iI2YwZjBmMSI+QTwvdGV4dD48dGV4dCB4PSI1MCUiIHk9Ijc1JSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmaWxsPSIjZjBmMGYxIj5UPC90ZXh0Pjwvc3ZnPg==">
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMWEyOTI3Ij48L3JlY3Q+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MCIgZmlsbD0iI2YwZjBmMSI+QTwvdGV4dD48dGV4dCB4PSI1MCUiIHk9Ijc1JSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmaWxsPSIjZjBmMGYxIj5UPC90ZXh0Pjwvc3ZnPg==">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
-        darkMode: 'media', // or 'class'
+        darkMode: 'media',
         theme: {
           extend: {
             colors: {
-              gray: {
-                50: '#fafafa', 75: '#f5f5f5', 100: '#f4f4f5', 200: '#e4e4e7', 300: '#d4d4d8', 400: '#a1a1aa',
-                500: '#71717a', 600: '#52525b', 700: '#3f3f46', 800: '#27272a', 900: '#18181b', 950: '#09090b',
-              },
+              gray: { 50: '#fafafa', 75: '#f5f5f5', 100: '#f4f4f5', 200: '#e4e4e7', 300: '#d4d4d8', 400: '#a1a1aa', 500: '#71717a', 600: '#52525b', 700: '#3f3f46', 800: '#27272a', 900: '#18181b', 950: '#09090b' },
             }
           }
         }
@@ -31,17 +28,20 @@
     </script>
     
     <style>
-        :root { --safe-area-inset-bottom: env(safe-area-inset-bottom); }
+        :root { 
+            --safe-area-inset-top: env(safe-area-inset-top);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom); 
+        }
         body { 
-          -webkit-tap-highlight-color: transparent; /* Disable tap highlight on iOS */
+          -webkit-tap-highlight-color: transparent;
+          padding-top: var(--safe-area-inset-top);
+          padding-bottom: var(--safe-area-inset-bottom);
         }
         .touch-manipulation { touch-action: manipulation; }
-        .bottom-nav { padding-bottom: calc(0.5rem + var(--safe-area-inset-bottom)); }
-        /* Simple transition for screen switching */
+        .bottom-nav { padding-bottom: var(--safe-area-inset-bottom); }
         .screen { display: none; }
         .screen.active { display: block; }
-        /* Chart.js tooltip fix */
-        .chart-container { position: relative; height: 40vh; width: 100%; }
+        .chart-container { position: relative; height: 45vh; width: 100%; }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased font-sans">
@@ -51,12 +51,12 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js"></script>
 
     <script type="text/babel">
-        const { useState, useEffect, useCallback, useMemo, useRef } = React;
+        const { useState, useEffect, useCallback, useMemo, useRef, createContext, useContext } = React;
 
         // --- CONSTANTS & DEFAULTS ---
         const ENERGY_EQUIVALENCE = 7700; // kcal per kg
@@ -94,129 +94,87 @@
         };
         
         const formatDate = (date) => new Date(date).toISOString().split('T')[0];
-        const formatNumber = (num, digits = 0) => (num && isFinite(num)) ? num.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : '–';
+        const formatNumber = (num, digits = 0) => (num !== null && isFinite(num)) ? num.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : '–';
         
         // --- CORE CALCULATION ENGINE ---
         const calculateOLS = (dataPoints) => {
             if (dataPoints.length < 2) return { slope: 0, intercept: 0, rSquared: 0 };
-            
             let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0, sumYY = 0;
             const n = dataPoints.length;
-
-            dataPoints.forEach(({ x, y }) => {
-                sumX += x;
-                sumY += y;
-                sumXY += x * y;
-                sumXX += x * x;
-                sumYY += y * y;
-            });
-
+            dataPoints.forEach(({ x, y }) => { sumX += x; sumY += y; sumXY += x * y; sumXX += x * x; sumYY += y * y; });
             const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
             const intercept = (sumY - slope * sumX) / n;
             const rNumerator = (n * sumXY - sumX * sumY);
             const rDenominator = Math.sqrt((n * sumXX - sumX * sumX) * (n * sumYY - sumY * sumY));
-            
             if (rDenominator === 0) return { slope: slope || 0, intercept: intercept || 0, rSquared: 0 };
-            
             const r = rNumerator / rDenominator;
-            const rSquared = r * r;
-
-            return { slope, intercept, rSquared };
+            return { slope, intercept, rSquared: r * r };
         };
 
         const calculateDerivedData = (entries, settings) => {
             const today = new Date();
-            const todayKey = getDayKey(today, settings.dayRollOverHour);
-            const entriesObj = entries.reduce((acc, entry) => {
-                acc[entry.date] = entry;
-                return acc;
-            }, {});
-
-            // 1. Filter data for regression window
+            const entriesObj = entries.reduce((acc, entry) => { acc[entry.date] = entry; return acc; }, {});
             const regressionEndDate = today;
             const regressionStartDate = addDays(regressionEndDate, -settings.regressionWindowDays);
-
             let weightPoints = [];
             for (let d = new Date(regressionStartDate); d <= regressionEndDate; d.setDate(d.getDate() + 1)) {
                 const dayKey = formatDate(d);
                 const entry = entriesObj[dayKey];
                 if (entry && entry.weightKg) {
-                    const dateIndex = (new Date(dayKey).getTime() - new Date(formatDate(regressionStartDate)).getTime()) / (1000 * 3600 * 24);
+                    const dateIndex = (new Date(dayKey).getTime() - new Date(formatDate(regressionStartDate)).getTime()) / 86400000;
                     weightPoints.push({ x: dateIndex, y: parseFloat(entry.weightKg) });
                 }
             }
-
-            // 2. Outlier Trimming
             if (settings.outlierTrimPct > 0 && weightPoints.length > 2) {
                 weightPoints.sort((a, b) => a.y - b.y);
                 const trimCount = Math.floor(weightPoints.length * (settings.outlierTrimPct / 100));
-                if (trimCount > 0) {
-                    weightPoints = weightPoints.slice(trimCount, weightPoints.length - trimCount);
-                }
+                if (trimCount > 0) weightPoints = weightPoints.slice(trimCount, -trimCount);
             }
-
             const { slope: slopeKgPerDay, rSquared } = weightPoints.length >= 21 ? calculateOLS(weightPoints) : { slope: 0, rSquared: 0 };
-
-            // 3. Filter data for calorie averaging
             const calorieEndDate = today;
             const calorieStartDate = addDays(calorieEndDate, -settings.calorieAvgWindowDays);
-            const calorieEntries = entries
-                .filter(e => e.calories && new Date(e.date) >= calorieStartDate && new Date(e.date) <= calorieEndDate)
-                .map(e => parseFloat(e.calories));
-            
+            const calorieEntries = entries.filter(e => e.calories && new Date(e.date) >= calorieStartDate && new Date(e.date) <= calorieEndDate).map(e => parseFloat(e.calories));
             const avgCalories = calorieEntries.length > 0 ? calorieEntries.reduce((a, b) => a + b, 0) / calorieEntries.length : 0;
-
-            // 4. Calculate final metrics
-            if (weightPoints.length < 21 || avgCalories === 0) {
-                return {
-                    TDEE: null, needToEat: null, calorieChangeNeeded: null, currentWeightChangeKgPerWeek: null,
-                    dataQuality: {
-                        daysWithWeight: weightPoints.length, daysWithCalories: calorieEntries.length, rSquared,
-                        windowCoverage: (weightPoints.length / settings.regressionWindowDays) * 100,
-                    },
-                };
+            const daysWithWeight = weightPoints.length;
+            if (daysWithWeight < 21 || avgCalories === 0) {
+                return { TDEE: null, needToEat: null, calorieChangeNeeded: null, currentWeightChangeKgPerWeek: null, dataQuality: { daysWithWeight, daysWithCalories: calorieEntries.length, rSquared, windowCoverage: (daysWithWeight / settings.regressionWindowDays) * 100 } };
             }
-            
             const deltaKcalPerDay = slopeKgPerDay * ENERGY_EQUIVALENCE;
             const TDEE = avgCalories - deltaKcalPerDay;
-            
             const targetDeltaPerDay = (settings.targetWeeklyChangeKg / 7) * ENERGY_EQUIVALENCE;
             const needToEat = TDEE + targetDeltaPerDay;
-            
             const calorieChangeNeeded = needToEat - avgCalories;
             const currentWeightChangeKgPerWeek = slopeKgPerDay * 7;
-            
-            return {
-                TDEE,
-                needToEat,
-                calorieChangeNeeded,
-                currentWeightChangeKgPerWeek,
-                dataQuality: {
-                    daysWithWeight: weightPoints.length,
-                    daysWithCalories: calorieEntries.length,
-                    rSquared,
-                    windowCoverage: (weightPoints.length / settings.regressionWindowDays) * 100,
-                },
-            };
+            return { TDEE, needToEat, calorieChangeNeeded, currentWeightChangeKgPerWeek, dataQuality: { daysWithWeight, daysWithCalories: calorieEntries.length, rSquared, windowCoverage: (daysWithWeight / settings.regressionWindowDays) * 100 } };
         };
 
+        // --- DATA CONTEXT for state management ---
+        const DataContext = createContext();
+
+        const DataProvider = ({ children }) => {
+            const [entries, setEntries] = useState([]);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                db.getEntries().then(savedEntries => {
+                    setEntries(savedEntries || []);
+                    setLoading(false);
+                });
+            }, []);
+
+            useEffect(() => {
+                if (!loading) {
+                    db.saveEntries(entries);
+                }
+            }, [entries, loading]);
+            
+            return <DataContext.Provider value={{ entries, setEntries, loading }}>{children}</DataContext.Provider>;
+        };
 
         // --- REACT COMPONENTS ---
-
         const Icon = ({ name, className }) => {
-            const icons = {
-                calendar: <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M-4.5 12h22.5" />,
-                chart: <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1.5-1.5m1.5 1.5l1.5-1.5m-7.5 0l3.75-3.75M11.25 12l-3.75-3.75m0 0l-3.75 3.75m3.75-3.75L15 15.75" />,
-                settings: <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-1.003 1.11-1.226M15 20.25a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM12 12.75a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5zM12 6.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM12 18.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM8.038 9.462c-.56-.223-1.02-.693-1.226-1.11M3.75 9.75a2.25 2.25 0 10-4.5 0 2.25 2.25 0 004.5 0zM4.156 5.062c.223-.56.694-1.02 1.11-1.226M9.75 3.75a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM19.844 18.938c.56.223 1.02.693 1.226 1.11M20.25 14.25a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM18.938 8.038c-.223.56-.693 1.02-1.11 1.226M14.25 20.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zM19.844 5.062c-.56-.223-1.02-.694-1.226-1.11M14.25 3.75a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5z" />,
-                chevronLeft: <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />,
-                chevronRight: <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />,
-                info: <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />,
-            };
-            return (
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-                    {icons[name]}
-                </svg>
-            );
+            const icons = { calendar: <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />, chart: <path d="M3 15v4m3-7v7m3-10v10m3-7v7m3-4v4m-15 4h18a2 2 0 002-2V5a2 2 0 00-2-2H3a2 2 0 00-2 2v14a2 2 0 002 2z" />, settings: <path d="M10.325 4.317c.431-.176.9-.27 1.393-.291.493-.021.99.037 1.469.172M12 21a9 9 0 100-18 9 9 0 000 18zm0 0v-2.015m0-11.97V3m5.683 2.317c.431.176.836.42 1.209.718M3.109 7.035a6.974 6.974 0 011.208-.718m10.364 10.364c.431-.176.836-.42 1.209-.718M3.109 16.965a6.974 6.974 0 011.208.718M21 12h-2.015M5.015 12H3" />, chevronLeft: <path d="M15 19l-7-7 7-7" />, chevronRight: <path d="M9 5l7 7-7 7" />, info: <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /> };
+            return <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>{icons[name]}</svg>;
         };
         
         const ResultCard = ({ derivedData, settings }) => {
@@ -226,55 +184,28 @@
                 if (quality.rSquared < 0.6) return <span className="text-xs font-medium text-yellow-600 dark:text-yellow-400">Medium Confidence (R² {formatNumber(quality.rSquared, 2)})</span>;
                 return <span className="text-xs font-medium text-green-600 dark:text-green-400">High Confidence (R² {formatNumber(quality.rSquared, 2)})</span>;
             };
-
             const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg';
             const changeVal = settings.unitSystem === 'imperial' ? derivedData.currentWeightChangeKgPerWeek * KG_TO_LBS : derivedData.currentWeightChangeKgPerWeek;
-
             return (
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 space-y-4">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-lg font-bold">Your Numbers</h2>
-                        {derivedData && getConfidenceBadge(derivedData.dataQuality)}
-                    </div>
-                    
+                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 space-y-4">
+                    <div className="flex justify-between items-center"><h2 className="text-lg font-bold">Your Numbers</h2>{derivedData && getConfidenceBadge(derivedData.dataQuality)}</div>
                     <div className="grid grid-cols-2 gap-4 text-center">
-                        <div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Need to Eat</p>
-                            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{formatNumber(derivedData.needToEat)} <span className="text-base font-normal">kcal</span></p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Adaptive TDEE</p>
-                            <p className="text-2xl font-bold">{formatNumber(derivedData.TDEE)} <span className="text-base font-normal">kcal</span></p>
-                        </div>
+                        <div><p className="text-sm text-gray-500 dark:text-gray-400">Need to Eat</p><p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{formatNumber(derivedData.needToEat)} <span className="text-base font-normal">kcal</span></p></div>
+                        <div><p className="text-sm text-gray-500 dark:text-gray-400">Adaptive TDEE</p><p className="text-2xl font-bold">{formatNumber(derivedData.TDEE)} <span className="text-base font-normal">kcal</span></p></div>
                     </div>
                     <div className="border-t border-gray-200 dark:border-gray-700 pt-4 grid grid-cols-2 gap-4 text-center">
-                        <div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Required Change</p>
-                             <p className={`text-lg font-semibold ${derivedData.calorieChangeNeeded > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                {derivedData.calorieChangeNeeded > 0 ? '+' : ''}{formatNumber(derivedData.calorieChangeNeeded)} kcal/day
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Current Trend</p>
-                            <p className={`text-lg font-semibold ${derivedData.currentWeightChangeKgPerWeek > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                                {derivedData.currentWeightChangeKgPerWeek > 0 ? '+' : ''}{formatNumber(changeVal, 2)} {weightUnit}/week
-                            </p>
-                        </div>
+                        <div><p className="text-sm text-gray-500 dark:text-gray-400">Required Change</p><p className={`text-lg font-semibold ${derivedData.calorieChangeNeeded > 0 ? 'text-green-600' : 'text-red-600'}`}>{derivedData.calorieChangeNeeded > 0 ? '+' : ''}{formatNumber(derivedData.calorieChangeNeeded)} kcal/day</p></div>
+                        <div><p className="text-sm text-gray-500 dark:text-gray-400">Current Trend</p><p className={`text-lg font-semibold ${changeVal > 0 ? 'text-red-600' : 'text-green-600'}`}>{changeVal > 0 ? '+' : ''}{formatNumber(changeVal, 2)} {weightUnit}/week</p></div>
                     </div>
-                     {derivedData.TDEE === null && (
-                        <div className="mt-4 p-3 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 rounded-lg text-sm flex items-center space-x-2">
-                            <Icon name="info" className="w-5 h-5 flex-shrink-0" />
-                            <span>Keep logging weight and calories daily. Your adaptive TDEE will appear after at least 3 weeks of consistent weight data.</span>
-                        </div>
-                    )}
+                    {derivedData.TDEE === null && <div className="mt-4 p-3 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 rounded-lg text-sm flex items-center space-x-2"><Icon name="info" className="w-5 h-5 flex-shrink-0" /><span>Keep logging weight and calories. Your adaptive TDEE will appear after 3 weeks of consistent weight data.</span></div>}
                 </div>
             );
         };
 
-        const DailyEntryScreen = ({ currentDay, setCurrentDay, entries, setEntries, derivedData, settings }) => {
+        const DailyEntryScreen = ({ currentDay, setCurrentDay, derivedData, settings }) => {
+            const { entries, setEntries } = useContext(DataContext);
             const currentDayKey = getDayKey(currentDay, settings.dayRollOverHour);
-            const currentEntry = entries.find(e => e.date === currentDayKey) || { date: currentDayKey, weightKg: '', calories: '' };
-            
+            const currentEntry = useMemo(() => entries.find(e => e.date === currentDayKey) || { date: currentDayKey, weightKg: '', calories: '' }, [entries, currentDayKey]);
             const [weightInput, setWeightInput] = useState('');
             const [caloriesInput, setCaloriesInput] = useState('');
 
@@ -287,550 +218,141 @@
 
             const handleSave = useCallback(() => {
                 const newEntries = [...entries];
-                const entryIndex = newEntries.findIndex(e => e.date === currentDayKey);
-                
+                let entryIndex = newEntries.findIndex(e => e.date === currentDayKey);
                 const weightKgValue = settings.unitSystem === 'imperial' ? (parseFloat(weightInput) / KG_TO_LBS) : parseFloat(weightInput);
-                
-                const updatedEntry = {
-                    ...currentEntry,
-                    weightKg: isNaN(weightKgValue) ? null : weightKgValue,
-                    calories: caloriesInput === '' ? null : parseInt(caloriesInput, 10),
-                    source: 'manual',
-                };
-                
-                if (entryIndex > -1) {
-                    newEntries[entryIndex] = updatedEntry;
-                } else {
-                    newEntries.push(updatedEntry);
-                }
-                
-                // Filter out empty entries and sort
-                const cleanedEntries = newEntries.filter(e => e.weightKg != null || e.calories != null).sort((a,b) => new Date(a.date) - new Date(b.date));
-                setEntries(cleanedEntries);
-            }, [weightInput, caloriesInput, currentDayKey, entries, setEntries, settings.unitSystem]);
-
-            const changeDay = (amount) => {
-                handleSave();
-                setCurrentDay(prev => addDays(prev, amount));
-            };
-
+                const updatedEntry = { ...currentEntry, weightKg: isNaN(weightKgValue) ? null : weightKgValue, calories: caloriesInput === '' ? null : parseInt(caloriesInput, 10), source: 'manual' };
+                if (entryIndex > -1) newEntries[entryIndex] = updatedEntry;
+                else newEntries.push(updatedEntry);
+                setEntries(newEntries.filter(e => e.weightKg != null || e.calories != null).sort((a,b) => new Date(a.date) - new Date(b.date)));
+            }, [weightInput, caloriesInput, currentDayKey, entries, setEntries, settings.unitSystem, currentEntry]);
+            
+            const changeDay = (amount) => { handleSave(); setCurrentDay(prev => addDays(prev, amount)); };
             const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg';
-            const today = new Date();
-            const isToday = getDayKey(today, settings.dayRollOverHour) === currentDayKey;
+            const isToday = getDayKey(new Date(), settings.dayRollOverHour) === currentDayKey;
 
             return (
                 <div className="p-4 space-y-6">
                     <div className="flex items-center justify-between">
                         <button onClick={() => changeDay(-1)} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"><Icon name="chevronLeft" className="w-6 h-6" /></button>
-                        <h1 className="text-xl font-bold text-center">
-                            {isToday ? 'Today' : currentDay.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
-                        </h1>
-                        <button onClick={() => changeDay(1)} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation" disabled={isToday}>
-                          <Icon name="chevronRight" className={`w-6 h-6 ${isToday ? 'text-gray-400 dark:text-gray-600' : ''}`} />
-                        </button>
+                        <h1 className="text-xl font-bold text-center">{isToday ? 'Today' : currentDay.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}</h1>
+                        <button onClick={() => changeDay(1)} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation" disabled={isToday}><Icon name="chevronRight" className={`w-6 h-6 ${isToday ? 'text-gray-400 dark:text-gray-600' : ''}`} /></button>
                     </div>
-
                     <div className="space-y-4">
-                        <div>
-                            <label htmlFor="weight" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Weight ({weightUnit})</label>
-                            <input
-                                id="weight"
-                                type="number"
-                                inputMode="decimal"
-                                value={weightInput}
-                                onChange={e => setWeightInput(e.target.value)}
-                                onBlur={handleSave}
-                                placeholder="e.g., 70.5"
-                                className="mt-1 block w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="calories" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Calories (kcal)</label>
-                            <input
-                                id="calories"
-                                type="number"
-                                inputMode="numeric"
-                                value={caloriesInput}
-                                onChange={e => setCaloriesInput(e.target.value)}
-                                onBlur={handleSave}
-                                placeholder="e.g., 2500"
-                                className="mt-1 block w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
-                        </div>
+                        <div><label htmlFor="weight" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Weight ({weightUnit})</label><input id="weight" type="number" inputMode="decimal" value={weightInput} onChange={e => setWeightInput(e.target.value)} onBlur={handleSave} placeholder={`e.g., ${weightUnit === 'kg' ? '70.5' : '155.5'}`} className="mt-1 block w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" /></div>
+                        <div><label htmlFor="calories" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Calories (kcal)</label><input id="calories" type="number" inputMode="numeric" value={caloriesInput} onChange={e => setCaloriesInput(e.target.value)} onBlur={handleSave} placeholder="e.g., 2500" className="mt-1 block w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" /></div>
                     </div>
                     <ResultCard derivedData={derivedData} settings={settings} />
                 </div>
             );
         };
 
-        const ProgressChart = ({ entries, settings, derivedData }) => {
+        const ProgressChart = ({ settings, derivedData }) => {
+            const { entries } = useContext(DataContext);
             const chartRef = useRef(null);
             const chartInstance = useRef(null);
             
             useEffect(() => {
                 if (!chartRef.current || !entries) return;
-                
                 const ctx = chartRef.current.getContext('2d');
-                
-                // Destroy previous chart instance
-                if (chartInstance.current) {
-                    chartInstance.current.destroy();
-                }
-
+                if (chartInstance.current) chartInstance.current.destroy();
                 const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg';
                 const weightMultiplier = settings.unitSystem === 'imperial' ? KG_TO_LBS : 1;
-                
                 const labels = entries.map(e => new Date(e.date));
                 const weightData = entries.map(e => e.weightKg ? e.weightKg * weightMultiplier : null);
-                
                 let calorieData = entries.map(e => e.calories ? Number(e.calories) : null);
-                if (settings.chartSmoothing) {
-                    const movingAverage = (data, windowSize) => {
-                        let result = [];
-                        for (let i = 0; i < data.length; i++) {
-                            const window = data.slice(Math.max(0, i - windowSize + 1), i + 1);
-                            const nonNull = window.filter(v => v !== null);
-                            if (nonNull.length > 0) {
-                                result.push(nonNull.reduce((a, b) => a + b, 0) / nonNull.length);
-                            } else {
-                                result.push(null);
-                            }
-                        }
-                        return result;
-                    };
-                    calorieData = movingAverage(calorieData, 7);
-                }
-
-                // Trendline calculation
+                if (settings.chartSmoothing) { const movingAverage = (data, windowSize) => data.map((_, i, arr) => { const window = arr.slice(Math.max(0, i - windowSize + 1), i + 1).filter(v => v !== null); return window.length > 0 ? window.reduce((a, b) => a + b, 0) / window.length : null; }); calorieData = movingAverage(calorieData, 7); }
                 let trendlineData = [];
                 if (derivedData && derivedData.TDEE !== null) {
-                    const allPoints = entries.map(e => {
-                        if (e.weightKg) {
-                            return {
-                                x: new Date(e.date).getTime(),
-                                y: parseFloat(e.weightKg)
-                            };
-                        }
-                        return null;
-                    }).filter(Boolean);
-                    
-                    if (allPoints.length > 1) {
-                        const { slope, intercept } = calculateOLS(allPoints.map(p => ({
-                            x: (p.x - allPoints[0].x) / (1000 * 3600 * 24),
-                            y: p.y
-                        })));
-                        const startDateIndex = allPoints[0].x;
-                        trendlineData = allPoints.map(p => {
-                            const dateIndex = (p.x - startDateIndex) / (1000 * 3600 * 24);
-                            return (intercept + slope * dateIndex) * weightMultiplier;
-                        });
-                    }
+                    const allPoints = entries.map(e => e.weightKg ? { x: new Date(e.date).getTime(), y: parseFloat(e.weightKg) } : null).filter(Boolean);
+                    if (allPoints.length > 1) { const { slope, intercept } = calculateOLS(allPoints.map(p => ({ x: (p.x - allPoints[0].x) / 86400000, y: p.y }))); const startDateIndex = allPoints[0].x; trendlineData = allPoints.map(p => { const dateIndex = (p.x - startDateIndex) / 86400000; return (intercept + slope * dateIndex) * weightMultiplier; }); }
                 }
-
                 chartInstance.current = new Chart(ctx, {
                     type: 'line',
-                    data: {
-                        labels,
-                        datasets: [
-                            {
-                                label: `Weight (${weightUnit})`,
-                                data: weightData,
-                                yAxisID: 'yWeight',
-                                borderColor: 'rgb(59, 130, 246)',
-                                backgroundColor: 'rgba(59, 130, 246, 0.5)',
-                                type: 'scatter',
-                                pointRadius: 3,
-                                showLine: false,
-                            },
-                            {
-                                label: 'Weight Trend',
-                                data: trendlineData,
-                                yAxisID: 'yWeight',
-                                borderColor: 'rgba(59, 130, 246, 0.5)',
-                                borderWidth: 2,
-                                pointRadius: 0,
-                                type: 'line',
-                                fill: false,
-                                tension: 0.1,
-                            },
-                            {
-                                label: 'Calories (kcal)',
-                                data: calorieData,
-                                yAxisID: 'yCalories',
-                                borderColor: 'rgb(234, 179, 8)',
-                                borderWidth: 2,
-                                pointRadius: 0,
-                                tension: 0.4,
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            x: {
-                                type: 'time',
-                                time: { unit: 'day' },
-                                grid: { color: 'rgba(128, 128, 128, 0.2)' }
-                            },
-                            yWeight: {
-                                type: 'linear',
-                                position: 'left',
-                                title: { display: true, text: `Weight (${weightUnit})` },
-                                grid: { color: 'rgba(128, 128, 128, 0.2)' }
-                            },
-                            yCalories: {
-                                type: 'linear',
-                                position: 'right',
-                                title: { display: true, text: 'Calories (kcal)' },
-                                grid: { drawOnChartArea: false } // only show grid for weight axis
-                            }
-                        },
-                        plugins: {
-                            tooltip: {
-                                mode: 'index',
-                                intersect: false
-                            }
-                        }
-                    }
+                    data: { labels, datasets: [ { label: `Weight (${weightUnit})`, data: weightData, yAxisID: 'yWeight', borderColor: 'rgb(59, 130, 246)', backgroundColor: 'rgba(59, 130, 246, 0.5)', type: 'scatter', pointRadius: 3, showLine: false }, { label: 'Weight Trend', data: trendlineData, yAxisID: 'yWeight', borderColor: 'rgba(59, 130, 246, 0.5)', borderWidth: 2, pointRadius: 0, type: 'line', fill: false, tension: 0.1 }, { label: 'Calories (kcal)', data: calorieData, yAxisID: 'yCalories', borderColor: 'rgb(234, 179, 8)', borderWidth: 2, pointRadius: 0, tension: 0.4 } ] },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'day' }, grid: { color: 'rgba(128, 128, 128, 0.2)' } }, yWeight: { type: 'linear', position: 'left', title: { display: true, text: `Weight (${weightUnit})` }, grid: { color: 'rgba(128, 128, 128, 0.2)' } }, yCalories: { type: 'linear', position: 'right', title: { display: true, text: 'Calories (kcal)' }, grid: { drawOnChartArea: false } } }, plugins: { tooltip: { mode: 'index', intersect: false } } }
                 });
-
-            }, [entries, settings, derivedData]); // Re-render chart when data changes
-            
-            return (
-                <div className="p-4">
-                    <div className="chart-container">
-                        <canvas ref={chartRef}></canvas>
-                    </div>
-                </div>
-            );
+            }, [entries, settings, derivedData]);
+            return <div className="p-4"><div className="chart-container"><canvas ref={chartRef}></canvas></div></div>;
         };
         
-        const ProgressTable = ({ entries, settings }) => {
+        const ProgressTable = ({ settings }) => {
+            const { entries } = useContext(DataContext);
             const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg';
             const weightMultiplier = settings.unitSystem === 'imperial' ? KG_TO_LBS : 1;
-
-            return (
-                 <div className="px-4">
-                    <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-                        <table className="min-w-full divide-y-2 divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 text-sm">
-                            <thead className="text-left">
-                                <tr>
-                                    <th className="whitespace-nowrap px-4 py-2 font-medium">Date</th>
-                                    <th className="whitespace-nowrap px-4 py-2 font-medium">Weight ({weightUnit})</th>
-                                    <th className="whitespace-nowrap px-4 py-2 font-medium">Calories (kcal)</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                {[...entries].reverse().map(entry => (
-                                    <tr key={entry.date}>
-                                        <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white">{entry.date}</td>
-                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 dark:text-gray-200">
-                                            {entry.weightKg ? formatNumber(entry.weightKg * weightMultiplier, 1) : '–'}
-                                        </td>
-                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 dark:text-gray-200">
-                                            {entry.calories ? formatNumber(entry.calories, 0) : '–'}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            );
+            return <div className="px-4"><div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700"><table className="min-w-full divide-y-2 divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900 text-sm"><thead className="text-left"><tr><th className="whitespace-nowrap px-4 py-2 font-medium">Date</th><th className="whitespace-nowrap px-4 py-2 font-medium">Weight ({weightUnit})</th><th className="whitespace-nowrap px-4 py-2 font-medium">Calories (kcal)</th></tr></thead><tbody className="divide-y divide-gray-200 dark:divide-gray-700">{[...entries].reverse().map(entry => <tr key={entry.date}><td className="whitespace-nowrap px-4 py-2 font-medium">{entry.date}</td><td className="whitespace-nowrap px-4 py-2">{entry.weightKg ? formatNumber(entry.weightKg * weightMultiplier, 1) : '–'}</td><td className="whitespace-nowrap px-4 py-2">{entry.calories ? formatNumber(entry.calories, 0) : '–'}</td></tr>)}</tbody></table></div></div>;
         };
         
-        const ProgressScreen = ({ entries, settings, derivedData }) => {
-            const [view, setView] = useState('graph'); // 'graph' or 'table'
-            return (
-                <div className="space-y-4">
-                    <div className="px-4 pt-4">
-                        <div className="p-1 bg-gray-200 dark:bg-gray-700 rounded-lg flex space-x-1">
-                            <button onClick={() => setView('graph')} className={`w-full py-2 text-sm font-semibold rounded-md ${view === 'graph' ? 'bg-white dark:bg-gray-900 shadow' : 'text-gray-600 dark:text-gray-300'}`}>Graph</button>
-                            <button onClick={() => setView('table')} className={`w-full py-2 text-sm font-semibold rounded-md ${view === 'table' ? 'bg-white dark:bg-gray-900 shadow' : 'text-gray-600 dark:text-gray-300'}`}>Table</button>
-                        </div>
-                    </div>
-                    {view === 'graph' ? <ProgressChart entries={entries} settings={settings} derivedData={derivedData} /> : <ProgressTable entries={entries} settings={settings} />}
-                </div>
-            );
+        const ProgressScreen = ({ derivedData, settings }) => {
+            const [view, setView] = useState('graph');
+            return <div className="space-y-4"><div className="px-4 pt-4"><div className="p-1 bg-gray-200 dark:bg-gray-700 rounded-lg flex space-x-1"><button onClick={() => setView('graph')} className={`w-full py-2 text-sm font-semibold rounded-md ${view === 'graph' ? 'bg-white dark:bg-gray-900 shadow' : ''}`}>Graph</button><button onClick={() => setView('table')} className={`w-full py-2 text-sm font-semibold rounded-md ${view === 'table' ? 'bg-white dark:bg-gray-900 shadow' : ''}`}>Table</button></div></div>{view === 'graph' ? <ProgressChart settings={settings} derivedData={derivedData} /> : <ProgressTable settings={settings} />}</div>;
         };
 
         const SettingsScreen = ({ settings, setSettings }) => {
-            const handleSettingChange = (key, value) => {
-                const newSettings = { ...settings, [key]: value };
-                setSettings(newSettings);
-            };
-
+            const { entries, setEntries } = useContext(DataContext);
+            const handleSettingChange = (key, value) => { setSettings({ ...settings, [key]: value }); };
             const handleExport = (format) => {
-                const data = {
-                    settings: settings,
-                    entries: db.getEntries()
-                };
                 let content, filename, mimeType;
-                
-                if (format === 'json') {
-                    content = JSON.stringify({settings, entries: (window.APP_STATE.entries || [])}, null, 2);
-                    filename = `adaptive_tdee_backup_${new Date().toISOString().split('T')[0]}.json`;
-                    mimeType = 'application/json';
-                } else { // csv
-                    const headers = 'date,weightKg,calories';
-                    const rows = (window.APP_STATE.entries || []).map(e => `${e.date},${e.weightKg || ''},${e.calories || ''}`).join('\n');
-                    content = `${headers}\n${rows}`;
-                    filename = `adaptive_tdee_export_${new Date().toISOString().split('T')[0]}.csv`;
-                    mimeType = 'text/csv';
-                }
-
-                const blob = new Blob([content], { type: mimeType });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                if (format === 'json') { content = JSON.stringify({settings, entries}, null, 2); filename = `adaptive_tdee_backup_${new Date().toISOString().split('T')[0]}.json`; mimeType = 'application/json'; } 
+                else { const headers = 'date,weightKg,calories'; const rows = entries.map(e => `${e.date},${e.weightKg || ''},${e.calories || ''}`).join('\n'); content = `${headers}\n${rows}`; filename = `adaptive_tdee_export_${new Date().toISOString().split('T')[0]}.csv`; mimeType = 'text/csv'; }
+                const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([content], { type: mimeType })); a.download = filename; a.click(); URL.revokeObjectURL(a.href);
             };
-
             const handleImport = (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        if (file.name.endsWith('.json')) {
-                            const data = JSON.parse(e.target.result);
-                            if (data.settings && data.entries) {
-                                setSettings(data.settings);
-                                window.APP_STATE.setEntries(data.entries);
-                                alert('Import successful!');
-                            } else {
-                                throw new Error('Invalid JSON format.');
-                            }
-                        } else if (file.name.endsWith('.csv')) {
-                            const lines = e.target.result.split('\n');
-                            const headers = lines[0].trim().split(',');
-                            const dateIndex = headers.indexOf('date');
-                            const weightKgIndex = headers.indexOf('weightKg');
-                            const caloriesIndex = headers.indexOf('calories');
-                            
-                            if (dateIndex === -1) throw new Error('CSV must contain a "date" column.');
-                            
-                            const importedEntries = lines.slice(1).map(line => {
-                                const values = line.trim().split(',');
-                                const entry = { date: values[dateIndex] };
-                                if (weightKgIndex > -1 && values[weightKgIndex]) entry.weightKg = parseFloat(values[weightKgIndex]);
-                                if (caloriesIndex > -1 && values[caloriesIndex]) entry.calories = parseInt(values[caloriesIndex], 10);
-                                return entry;
-                            }).filter(e => e.weightKg || e.calories);
-                            
-                            // Merge with existing data
-                            const existingEntries = window.APP_STATE.entries || [];
-                            const entryMap = new Map(existingEntries.map(e => [e.date, e]));
-                            importedEntries.forEach(imp => entryMap.set(imp.date, imp));
-                            const merged = Array.from(entryMap.values()).sort((a,b) => new Date(a.date) - new Date(b.date));
-                            window.APP_STATE.setEntries(merged);
-                            alert('CSV import successful!');
-                        }
-                    } catch (error) {
-                        alert(`Import failed: ${error.message}`);
-                    }
-                };
-                reader.readAsText(file);
+                const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (e) => {
+                    try { if (file.name.endsWith('.json')) { const data = JSON.parse(e.target.result); if (data.settings && data.entries) { setSettings(data.settings); setEntries(data.entries); alert('Import successful!'); } else { throw new Error('Invalid JSON format.'); } } else if (file.name.endsWith('.csv')) { const lines = e.target.result.split('\n'); const headers = lines[0].trim().split(','); const dateIndex = headers.indexOf('date'); if (dateIndex === -1) throw new Error('CSV must contain a "date" column.'); const weightKgIndex = headers.indexOf('weightKg'); const caloriesIndex = headers.indexOf('calories'); const importedEntries = lines.slice(1).map(line => { const values = line.trim().split(','); const entry = { date: values[dateIndex] }; if (weightKgIndex > -1 && values[weightKgIndex]) entry.weightKg = parseFloat(values[weightKgIndex]); if (caloriesIndex > -1 && values[caloriesIndex]) entry.calories = parseInt(values[caloriesIndex], 10); return entry; }).filter(e => e.date && (e.weightKg || e.calories)); const entryMap = new Map(entries.map(e => [e.date, e])); importedEntries.forEach(imp => entryMap.set(imp.date, imp)); setEntries(Array.from(entryMap.values()).sort((a,b) => new Date(a.date) - new Date(b.date))); alert('CSV import successful!'); } } catch (error) { alert(`Import failed: ${error.message}`); }
+                }; reader.readAsText(file);
             };
-            
-            const handleReset = () => {
-                if (confirm('Are you sure you want to delete all data? This cannot be undone.')) {
-                    db.clearAll().then(() => {
-                        window.APP_STATE.setEntries([]);
-                        setSettings(DEFAULT_SETTINGS);
-                        alert('All data has been cleared.');
-                    });
-                }
-            };
-            
-            const weightChange = settings.targetWeeklyChangeKg;
-            const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg';
-            const displayWeightChange = settings.unitSystem === 'imperial' ? (weightChange * KG_TO_LBS).toFixed(2) : weightChange.toFixed(2);
-
-            return (
-                <div className="p-4 space-y-8">
-                    <h1 className="text-2xl font-bold">Settings</h1>
-                    
-                    <div className="space-y-4">
-                        <h2 className="text-lg font-semibold">Goal</h2>
-                        <div>
-                            <label htmlFor="target" className="block text-sm font-medium">Target Weekly Weight Change: <span className="font-bold">{displayWeightChange} {weightUnit}</span></label>
-                            <input
-                                id="target"
-                                type="range"
-                                min="-1"
-                                max="1"
-                                step="0.05"
-                                value={settings.targetWeeklyChangeKg}
-                                onChange={e => handleSettingChange('targetWeeklyChangeKg', parseFloat(e.target.value))}
-                                className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                            />
-                        </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                        <h2 className="text-lg font-semibold">Calculation Windows</h2>
-                        <div>
-                            <label htmlFor="regression" className="block text-sm font-medium">Weight Trend Window: <span className="font-bold">{settings.regressionWindowDays} days</span></label>
-                            <input id="regression" type="range" min="21" max="84" step="7" value={settings.regressionWindowDays} onChange={e => handleSettingChange('regressionWindowDays', parseInt(e.target.value))} className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer" />
-                        </div>
-                        <div>
-                            <label htmlFor="calories" className="block text-sm font-medium">Calorie Average Window: <span className="font-bold">{settings.calorieAvgWindowDays} days</span></label>
-                            <input id="calories" type="range" min="14" max="84" step="7" value={settings.calorieAvgWindowDays} onChange={e => handleSettingChange('calorieAvgWindowDays', parseInt(e.target.value))} className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer" />
-                        </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                         <h2 className="text-lg font-semibold">General</h2>
-                         <div className="flex items-center justify-between">
-                            <label className="text-sm font-medium">Unit System</label>
-                            <div className="flex items-center p-1 space-x-1 bg-gray-200 dark:bg-gray-700 rounded-lg">
-                                <button onClick={() => handleSettingChange('unitSystem', 'metric')} className={`px-3 py-1 text-sm font-semibold rounded-md ${settings.unitSystem === 'metric' ? 'bg-white dark:bg-gray-900 shadow' : ''}`}>Metric</button>
-                                <button onClick={() => handleSettingChange('unitSystem', 'imperial')} className={`px-3 py-1 text-sm font-semibold rounded-md ${settings.unitSystem === 'imperial' ? 'bg-white dark:bg-gray-900 shadow' : ''}`}>Imperial</button>
-                            </div>
-                         </div>
-                    </div>
-
-                    <div className="space-y-4">
-                        <h2 className="text-lg font-semibold">Data Management</h2>
-                        <div className="grid grid-cols-2 gap-2">
-                             <button onClick={() => handleExport('json')} className="w-full text-sm bg-gray-200 dark:bg-gray-700 py-2 rounded-md font-semibold">Export JSON</button>
-                             <button onClick={() => handleExport('csv')} className="w-full text-sm bg-gray-200 dark:bg-gray-700 py-2 rounded-md font-semibold">Export CSV</button>
-                             <label htmlFor="import-file" className="w-full text-center text-sm bg-blue-600 text-white py-2 rounded-md font-semibold cursor-pointer">Import Data</label>
-                             <input type="file" id="import-file" accept=".json,.csv" className="hidden" onChange={handleImport} />
-                             <button onClick={handleReset} className="w-full text-sm bg-red-600 text-white py-2 rounded-md font-semibold">Reset App</button>
-                        </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">All data is stored locally on your device. It is never sent to a server. Exports are only created when you choose to.</p>
-                    </div>
-
-                </div>
-            );
+            const handleReset = () => { if (confirm('Are you sure you want to delete all data? This cannot be undone.')) { db.clearAll().then(() => { setEntries([]); setSettings(DEFAULT_SETTINGS); alert('All data has been cleared.'); }); } };
+            const weightChange = settings.targetWeeklyChangeKg; const weightUnit = settings.unitSystem === 'imperial' ? 'lbs' : 'kg'; const displayWeightChange = settings.unitSystem === 'imperial' ? (weightChange * KG_TO_LBS).toFixed(2) : weightChange.toFixed(2);
+            return <div className="p-4 space-y-8"><h1 className="text-2xl font-bold">Settings</h1><div className="space-y-4"><h2 className="text-lg font-semibold">Goal</h2><div><label htmlFor="target" className="block text-sm font-medium">Target Weekly Weight Change: <span className="font-bold">{displayWeightChange} {weightUnit}</span></label><input id="target" type="range" min="-1" max="1" step="0.05" value={settings.targetWeeklyChangeKg} onChange={e => handleSettingChange('targetWeeklyChangeKg', parseFloat(e.target.value))} className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer" /></div></div><div className="space-y-4"><h2 className="text-lg font-semibold">Calculation Windows</h2><div><label htmlFor="regression" className="block text-sm font-medium">Weight Trend Window: <span className="font-bold">{settings.regressionWindowDays} days</span></label><input id="regression" type="range" min="21" max="84" step="7" value={settings.regressionWindowDays} onChange={e => handleSettingChange('regressionWindowDays', parseInt(e.target.value))} className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg" /></div><div><label htmlFor="calories" className="block text-sm font-medium">Calorie Average Window: <span className="font-bold">{settings.calorieAvgWindowDays} days</span></label><input id="calories" type="range" min="14" max="84" step="7" value={settings.calorieAvgWindowDays} onChange={e => handleSettingChange('calorieAvgWindowDays', parseInt(e.target.value))} className="w-full h-2 bg-gray-200 dark:bg-gray-700" /></div></div><div className="space-y-4"><h2 className="text-lg font-semibold">General</h2><div className="flex items-center justify-between"><label className="text-sm font-medium">Unit System</label><div className="flex items-center p-1 space-x-1 bg-gray-200 dark:bg-gray-700 rounded-lg"><button onClick={() => handleSettingChange('unitSystem', 'metric')} className={`px-3 py-1 text-sm font-semibold rounded-md ${settings.unitSystem === 'metric' ? 'bg-white dark:bg-gray-900 shadow' : ''}`}>Metric</button><button onClick={() => handleSettingChange('unitSystem', 'imperial')} className={`px-3 py-1 text-sm font-semibold rounded-md ${settings.unitSystem === 'imperial' ? 'bg-white dark:bg-gray-900 shadow' : ''}`}>Imperial</button></div></div></div><div className="space-y-4"><h2 className="text-lg font-semibold">Data Management</h2><div className="grid grid-cols-2 gap-2"><button onClick={() => handleExport('json')} className="w-full text-sm bg-gray-200 dark:bg-gray-700 py-2 rounded-md font-semibold">Export JSON</button><button onClick={() => handleExport('csv')} className="w-full text-sm bg-gray-200 dark:bg-gray-700 py-2 rounded-md font-semibold">Export CSV</button><label htmlFor="import-file" className="w-full text-center text-sm bg-blue-600 text-white py-2 rounded-md font-semibold cursor-pointer">Import Data</label><input type="file" id="import-file" accept=".json,.csv" className="hidden" onChange={handleImport} /><button onClick={handleReset} className="w-full text-sm bg-red-600 text-white py-2 rounded-md font-semibold">Reset App</button></div><p className="text-xs text-gray-500 dark:text-gray-400">All data is stored locally on your device.</p></div></div>;
         };
         
         const Onboarding = ({ onComplete }) => {
             const [step, setStep] = useState(1);
-            
-            const content = {
-                1: { title: "Welcome to Adaptive TDEE", text: "This app calculates your Total Daily Energy Expenditure (TDEE) based on your real-world data, not just a formula." },
-                2: { title: "How It Works", text: "Log your weight and calorie intake daily. After 3 weeks, the app will learn your metabolism and give you precise targets to reach your goal." },
-                3: { title: "Your Privacy", text: "All data you enter is stored securely on this device only. It is never uploaded or shared with anyone. You are in complete control." },
-            };
-
-            return (
-                 <div className="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-sm text-center space-y-4">
-                        <h2 className="text-2xl font-bold">{content[step].title}</h2>
-                        <p className="text-gray-600 dark:text-gray-300">{content[step].text}</p>
-                        <div className="flex justify-center space-x-2">
-                            {[1, 2, 3].map(i => <div key={i} className={`w-2 h-2 rounded-full ${i === step ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}`}></div>)}
-                        </div>
-                        {step < 3 ? (
-                            <button onClick={() => setStep(s => s + 1)} className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold">Next</button>
-                        ) : (
-                            <button onClick={onComplete} className="w-full bg-green-600 text-white py-2 rounded-md font-semibold">Get Started</button>
-                        )}
-                    </div>
-                </div>
-            );
+            const content = { 1: { title: "Welcome to Adaptive TDEE", text: "Calculates your TDEE from your real-world data, not a static formula." }, 2: { title: "How It Works", text: "Log your weight and calorie intake daily. After 3 weeks, the app provides precise targets to reach your goal." }, 3: { title: "Your Privacy", text: "All data is stored securely on this device only. It is never uploaded or shared. You are in control." } };
+            return <div className="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center p-4 z-50"><div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-sm text-center space-y-4"><h2 className="text-2xl font-bold">{content[step].title}</h2><p className="text-gray-600 dark:text-gray-300">{content[step].text}</p><div className="flex justify-center space-x-2">{[1, 2, 3].map(i => <div key={i} className={`w-2 h-2 rounded-full ${i === step ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}`}></div>)}</div>{step < 3 ? <button onClick={() => setStep(s => s + 1)} className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold">Next</button> : <button onClick={onComplete} className="w-full bg-green-600 text-white py-2 rounded-md font-semibold">Get Started</button>}</div></div>;
         };
 
-
         const App = () => {
-            const [loading, setLoading] = useState(true);
-            const [entries, setEntries] = useState([]);
+            const { entries, loading: entriesLoading } = useContext(DataContext);
             const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+            const [settingsLoading, setSettingsLoading] = useState(true);
             const [currentDay, setCurrentDay] = useState(new Date());
             const [activeScreen, setActiveScreen] = useState('daily');
             const [showOnboarding, setShowOnboarding] = useState(false);
             
-            // This is a bit of a hack to allow other components to update global state
-            // without excessive prop drilling in this single-file setup.
-            window.APP_STATE = { entries, setEntries };
-
             useEffect(() => {
-                const loadData = async () => {
-                    const savedEntries = await db.getEntries() || [];
-                    const savedSettings = await db.getSettings();
-                    
-                    if (savedSettings) {
-                        setSettings({ ...DEFAULT_SETTINGS, ...savedSettings });
-                    } else {
-                        // First launch
-                        setShowOnboarding(true);
-                    }
-
-                    setEntries(savedEntries);
-                    setLoading(false);
-                };
-                loadData();
+                db.getSettings().then(savedSettings => {
+                    if (savedSettings) setSettings({ ...DEFAULT_SETTINGS, ...savedSettings });
+                    else setShowOnboarding(true); // First launch
+                    setSettingsLoading(false);
+                });
             }, []);
 
-            useEffect(() => {
-                if (!loading) {
-                    db.saveEntries(entries);
-                }
-            }, [entries, loading]);
-
-            useEffect(() => {
-                if (!loading) {
-                    db.saveSettings(settings);
-                }
-            }, [settings, loading]);
+            useEffect(() => { if (!settingsLoading) db.saveSettings(settings); }, [settings, settingsLoading]);
 
             const derivedData = useMemo(() => {
-                if (loading) return {};
+                if (entriesLoading || settingsLoading) return {};
                 return calculateDerivedData(entries, settings);
-            }, [entries, settings, loading]);
+            }, [entries, settings, entriesLoading, settingsLoading]);
 
-            if (loading) {
-                return <div className="flex items-center justify-center h-screen"><p>Loading...</p></div>
-            }
-            
-            if (showOnboarding) {
-                return <Onboarding onComplete={() => setShowOnboarding(false)} />
-            }
+            if (entriesLoading || settingsLoading) { return <div className="flex items-center justify-center h-screen"><p>Loading Data...</p></div> }
+            if (showOnboarding) { return <Onboarding onComplete={() => setShowOnboarding(false)} /> }
 
             return (
                 <div className="max-w-xl mx-auto flex flex-col h-screen">
                     <main className="flex-grow overflow-y-auto pb-20">
-                        <div className={`screen ${activeScreen === 'daily' ? 'active' : ''}`}>
-                            <DailyEntryScreen 
-                                currentDay={currentDay}
-                                setCurrentDay={setCurrentDay}
-                                entries={entries}
-                                setEntries={setEntries}
-                                derivedData={derivedData}
-                                settings={settings}
-                            />
-                        </div>
-                        <div className={`screen ${activeScreen === 'progress' ? 'active' : ''}`}>
-                             <ProgressScreen entries={entries} settings={settings} derivedData={derivedData} />
-                        </div>
-                        <div className={`screen ${activeScreen === 'settings' ? 'active' : ''}`}>
-                            <SettingsScreen settings={settings} setSettings={setSettings} />
-                        </div>
+                        <div className={`screen ${activeScreen === 'daily' ? 'active' : ''}`}><DailyEntryScreen currentDay={currentDay} setCurrentDay={setCurrentDay} derivedData={derivedData} settings={settings} /></div>
+                        <div className={`screen ${activeScreen === 'progress' ? 'active' : ''}`}><ProgressScreen derivedData={derivedData} settings={settings} /></div>
+                        <div className={`screen ${activeScreen === 'settings' ? 'active' : ''}`}><SettingsScreen settings={settings} setSettings={setSettings} /></div>
                     </main>
-
-                    <nav className="fixed bottom-0 left-0 right-0 max-w-xl mx-auto bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 bottom-nav">
+                    <nav className="fixed bottom-0 left-0 right-0 max-w-xl mx-auto bg-gray-100/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-800 bottom-nav">
                         <div className="flex justify-around">
-                            <button onClick={() => setActiveScreen('daily')} className={`flex-1 py-2 flex flex-col items-center justify-center space-y-1 ${activeScreen === 'daily' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500'}`}>
-                                <Icon name="calendar" className="w-6 h-6" />
-                                <span className="text-xs font-medium">Daily</span>
-                            </button>
-                            <button onClick={() => setActiveScreen('progress')} className={`flex-1 py-2 flex flex-col items-center justify-center space-y-1 ${activeScreen === 'progress' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500'}`}>
-                                <Icon name="chart" className="w-6 h-6" />
-                                <span className="text-xs font-medium">Progress</span>
-                            </button>
-                            <button onClick={() => setActiveScreen('settings')} className={`flex-1 py-2 flex flex-col items-center justify-center space-y-1 ${activeScreen === 'settings' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500'}`}>
-                                <Icon name="settings" className="w-6 h-6" />
-                                <span className="text-xs font-medium">Settings</span>
-                            </button>
+                            {['daily', 'progress', 'settings'].map(screen => (
+                                <button key={screen} onClick={() => setActiveScreen(screen)} className={`flex-1 py-2 flex flex-col items-center justify-center space-y-1 ${activeScreen === screen ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500'}`}>
+                                    <Icon name={screen === 'daily' ? 'calendar' : (screen === 'progress' ? 'chart' : 'settings')} className="w-6 h-6" />
+                                    <span className="text-xs font-medium capitalize">{screen}</span>
+                                </button>
+                            ))}
                         </div>
                     </nav>
                 </div>
@@ -839,85 +361,20 @@
         
         // --- PWA SETUP ---
         const setupPWA = () => {
-             // 1. Inject Manifest
-            const manifest = {
-                "name": "Adaptive TDEE Calculator",
-                "short_name": "Adaptive TDEE",
-                "start_url": ".",
-                "display": "standalone",
-                "background_color": "#09090b",
-                "theme_color": "#18181b",
-                "description": "An adaptive TDEE calculator that learns from your data.",
-                "icons": [{
-                    "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAKeSURBVHja7dwhAQAgEAAh+Vd7gC98gQkCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+DDj3AQIAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQJZPJxZfVvLAAAAAElFTkSuQmCC",
-                    "sizes": "192x192",
-                    "type": "image/png"
-                }, {
-                    "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAP6SURBVHja7d0BDQAgEACx/Vf7gL/8jQkCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"},"sizes":"512x512","type":"image/png"}]
-            };
-            const stringifiedManifest = JSON.stringify(manifest);
-t            const blob = new Blob([stringifiedManifest], {type: 'application/json'});
-            const manifestURL = URL.createObjectURL(blob);
-            const link = document.createElement('link');
-            link.rel = 'manifest';
-            link.href = manifestURL;
-            document.head.appendChild(link);
-
-             // 2. Register Service Worker
+            const manifest = { name: "Adaptive TDEE", short_name: "Adaptive TDEE", start_url: ".", display: "standalone", background_color: "#09090b", theme_color: "#18181b", icons: [{ src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9Ijk2IiBmaWxsPSIjMW EyOTI3Ij48L3JlY3Q+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNTYiIGZpbGw9IiNmMGYwZjEiPkE8L3RleHQ+PHRleHQgeD0iNTAlIiB5PSI3NSUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMjgiIGZpbGw9IiNmMGYwZjEiPlQ8L3RleHQ+PC9zdmc+", sizes: "192x192 512x512", type: "image/svg+xml" }] };
+            const manifestURL = URL.createObjectURL(new Blob([JSON.stringify(manifest)], {type: 'application/json'}));
+            document.head.appendChild(Object.assign(document.createElement('link'), { rel: 'manifest', href: manifestURL }));
             if ('serviceWorker' in navigator) {
-                const swContent = `
-                    const CACHE_NAME = 'adaptive-tdee-cache-v1';
-                    const urlsToCache = [
-                        '/', 
-                        'https://unpkg.com/react@18/umd/react.production.min.js',
-                        'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
-                        'https://unpkg.com/@babel/standalone/babel.min.js',
-                        'https://cdn.tailwindcss.com',
-                        'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
-                        'https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js',
-                        'https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js'
-                    ];
-
-                    self.addEventListener('install', event => {
-                        event.waitUntil(
-                            caches.open(CACHE_NAME).then(cache => {
-                                console.log('Opened cache');
-                                // Cache the app shell. Note: the root '/' will cache the index.html itself.
-                                return cache.addAll(urlsToCache);
-                            })
-                        );
-                    });
-
-                    self.addEventListener('fetch', event => {
-                        event.respondWith(
-                            caches.match(event.request).then(response => {
-                                // Cache hit - return response
-                                if (response) {
-                                    return response;
-                                }
-                                return fetch(event.request);
-                            })
-                        );
-                    });
-                `;
-                const swBlob = new Blob([swContent], {type: 'application/javascript'});
-                const swUrl = URL.createObjectURL(swBlob);
-
-                navigator.serviceWorker.register(swUrl)
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('ServiceWorker registration failed: ', error);
-                    });
+                const swContent = `const CACHE_NAME = 'adaptive-tdee-cache-v1'; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.add('/')))); self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));`;
+                navigator.serviceWorker.register(URL.createObjectURL(new Blob([swContent], {type: 'application/javascript'})))
+                    .then(() => console.log('ServiceWorker registration successful.'))
+                    .catch(err => console.log('ServiceWorker registration failed: ', err));
             }
         };
-
         setupPWA();
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-
+        root.render(<DataProvider><App /></DataProvider>);
     </script>
 
 </body>
